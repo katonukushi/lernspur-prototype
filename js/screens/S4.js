@@ -1,36 +1,46 @@
-// S4 My Trail: progress across exams (A-WF 06)
+// S4 My Trail: progress across exams + practice packs (Figma frame "S4 - My Trail")
 
 (function () {
   var ui = LS.ui, d = LS.data, t = LS.t;
 
-  // ---------- S4 My Trail: progress across exams (A-WF 06) ----------
-  LS.action("practice", function () {
-    if (LS.state.sheetsDone < d.nextGoal.sheets) LS.state.sheetsDone++;
-  });
+  LS.action("practise", function () { if (LS.state.practice < d.pack.size) LS.state.practice++; });
 
   LS.screen({
-    id: "S4", role: "student", title: "My Trail: progress across exams", source: "A-WF 06",
+    id: "S4", role: "student", title: "My Trail", source: "Figma S4", back: ["Home", "S1"],
+    headTitle: function () { return t("My Trail", "Meine Spur"); },
     render: function (st) {
-      var max = 3;
-      var bars = d.journey.map(function (j) {
-        return '<div class="bar-col"><div class="bar' + (j.next ? " next" : "") + '" style="height:' + (j.next ? 20 : 20 + j.stars / max * 100) + 'px"></div>' +
-          "<span>" + j.exam + (j.next ? " (" + t("next!", "als Nächstes!") + ")" : "") + "</span></div>";
+      var exams = d.exams.map(function (e, i) {
+        var stars = e.current ? (st.published ? LS.starsFor(LS.total()) : null) : e.stars;
+        return (i ? '<span class="trail-line"></span>' : "") +
+          '<div class="card inner exam-card"><p class="muted small">' + e.label + " · " + e.date + "</p>" +
+          (stars ? '<p class="big-stars">' + ui.stars(stars) + '</p><p class="small">' + stars + " " + t("of 5 stars", "von 5 Sternen") + (e.current ? "" : " [demo]") + "</p>"
+                 : '<p class="small muted">' + t("Your teacher is checking", "Wird angeschaut") + "</p>") + "</div>";
       }).join("");
-      var skills = d.skills.map(function (s) {
-        return '<div class="row between"><span>' + s.name + "</span>" + ui.dots(s.level) + "</div>";
-      }).join("");
-      var done = st.sheetsDone >= d.nextGoal.sheets;
-      return "<h1>" + t("My journey", "Meine Reise") + "</h1>" +
-        '<div class="split even">' +
-          ui.card("<h2>" + t("Stars per exam", "Sterne pro Prüfung") + '</h2><div class="bars">' + bars + "</div>") +
-          ui.card("<h2>" + t("My skills", "Meine Fähigkeiten") + '</h2><div class="stack tight">' + skills + "</div>") +
+
+      var hasPack = st.published && st.packAttach;
+      var done = LS.flagClosed();
+      var growing = [{ name: t("Comparing fractions", "Brüche vergleichen"), done: st.practice, of: d.pack.size }].concat(d.skillsGrowing);
+
+      var packs = d.otherPacks.map(function (p) {
+        return '<div class="item-row"><b>[x] ' + p.name + "</b><span>" + t("Done", "Fertig") + "</span></div>";
+      }).join("") + (hasPack
+        ? '<div class="item-row"><div><b>' + (done ? "[x] " : "[ ] ") + t("Comparing fractions", "Brüche vergleichen") + '</b><p class="muted small">' + t("From", "Von") + " " + d.teacher.name + "</p></div>" +
+            (done ? "<span>" + t("Done", "Fertig") + "</span>"
+                  : ui.btn(st.practice > 2 ? t("Next question", "Nächste Frage") + " (" + st.practice + "/" + d.pack.size + ")" : t("Start", "Los"), { action: "practise", primary: true })) + "</div>"
+        : '<p class="muted small">' + t("New packs from your teacher show up here.", "Neue Pakete von deiner Lehrerin erscheinen hier.") + "</p>");
+
+      return '<div class="row end">' + ui.pill("Math", { on: true }) + ui.pill("Science") + "</div>" +
+        ui.card("<h2>" + t("My exams", "Meine Prüfungen") + '</h2><div class="trail exams">' + exams + "</div>" +
+          '<p class="muted small">' + t("Only your own exams. No class ranking.", "Nur deine eigenen Prüfungen. Kein Vergleich mit der Klasse.") + "</p>") +
+        '<div class="grid-3">' +
+          ui.card("<h2>" + t("Skills I've got", "Das kann ich") + '</h2><div class="stack tight">' + d.skillsGot.map(function (s) { return '<span class="pill big">' + s + "</span>"; }).join("") + "</div>") +
+          ui.card("<h2>" + t("Skills I'm growing", "Daran wachse ich") + "</h2>" + growing.map(function (g) {
+            return "<p><b>" + g.name + '</b><br><span class="row">' + ui.progress(g.done, g.of) + '<span class="small">' + g.done + "/" + g.of + " " + t("practice", "geübt") + "</span></span></p>";
+          }).join("")) +
+          ui.card("<h2>" + t("My practice packs", "Meine Übungspakete") + "</h2>" + packs +
+            (done && hasPack ? '<div class="banner ok">' + t("Well done! Frau Weber can see that you mastered it.", "Super! Frau Weber sieht, dass du es geschafft hast.") + "</div>" : ""), "emph") +
         "</div>" +
-        ui.card("<h2>" + t("Next goal", "Nächstes Ziel") + "</h2><p>" + d.nextGoal.text + "</p>" +
-          '<progress max="' + d.nextGoal.sheets + '" value="' + st.sheetsDone + '"></progress> ' +
-          '<span class="muted">' + st.sheetsDone + " " + t("of", "von") + " " + d.nextGoal.sheets + " " + t("sheets", "Blättern") + "</span><p>" +
-          (done ? ui.chip(t("Badge unlocked", "Abzeichen freigeschaltet") + ": " + d.nextGoal.badge, "ok")
-                : ui.btn(t("Start practice", "Üben starten"), { action: "practice", primary: true })) + "</p>", "emph") +
-        ui.note("No percentages and no red marks. Skill levels shown as friendly dots.");
+        ui.note("Practising is simulated: each click counts one solved question. 5 of 5 closes the red flag (T5, P1).");
     }
   });
 })();

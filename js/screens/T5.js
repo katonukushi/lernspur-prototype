@@ -1,32 +1,29 @@
-// T5 Student profile with the Learning Trail
-// No wireframe yet (promised in M1 section 4.2). The team decides the design, see issue #16.
-// Until then: a labelled placeholder that lists what the screen has to show.
+// T5 Student profile with the Learning Trail (Figma frame "T5 - Student profile with Learning Trail")
 
 (function () {
   var ui = LS.ui, d = LS.data;
 
-  var FLAG_LABEL = { open: "open", confirmed: "confirmed", dismissed: "dismissed as slip", observe: "under observation" };
+  var FLAG_TEXT = {
+    open: "suggested (see Evidence Trail)",
+    confirmed: "confirmed",
+    wait: "waiting for the next exam",
+    dismissed: "dismissed"
+  };
 
   LS.screen({
-    id: "T5", role: "teacher", title: "Student profile with the Learning Trail", source: "no wireframe yet",
-    crumbs: ["Grade 4B", "Tim Becker"],
+    id: "T5", role: "teacher", nav: "Students", title: "Learning Trail", source: "Figma T5",
     render: function (st) {
-      return "<h1>" + d.student.name + " - Profile</h1>" +
-        '<div class="banner info">Placeholder. No wireframe yet, the team decides the layout (issue #16).</div>' +
-        '<div class="split even">' +
-          ui.todo("Must show (from M3_Base)", [
-            "Learning Trail across exams (M1 section 4.1)",
-            "Red flags with evidence from several exams (L-M2 W11)",
-            "Practice missions and whether they closed a flag (M1 4.1, step 4)",
-            "Messages and notes to the student"
-          ]) +
-          ui.card("<h2>Current demo data</h2>" +
-            "<p>Red flag: " + d.redFlag.concept + " (" + FLAG_LABEL[st.flag] + ")</p>" +
-            "<p>Practice sheets done: " + st.sheetsDone + " of " + d.nextGoal.sheets + "</p>" +
-            "<p>Fractions Quiz: " + (st.committed ? LS.total() + " / " + d.exam.maxPoints : "not graded yet") + "</p>" +
-            ui.btn("Back to diagnostics (T4)", { go: "T4" })) +
-        "</div>" +
-        ui.ph("Learning Trail (layout to be decided)", 160);
+      var flagText = LS.flagClosed() && st.flag === "confirmed" ? "closed - practice pack mastered" : FLAG_TEXT[st.flag];
+      var header = '<div class="trail-head"><span class="muted small">Concept</span>' + d.exams.map(function (e) {
+        return '<span class="muted tiny">' + e.label + " · " + e.date + " · " + (e.current ? st.examLang : e.lang + " [demo]") + "</span>";
+      }).join("") + "</div>";
+      var rows = d.trail.map(function (r) {
+        return '<div class="trail-grid"><b>' + r.concept + "</b>" + LS.trailRow(r.mistakes, false) + "</div>";
+      }).join("");
+      return '<div class="page-head"><h1>' + d.student.name + " - Learning Trail</h1>" + ui.btn("Back to evidence", { go: "T4" }) + "</div>" +
+        ui.card("<h2>Trail across exams</h2>" + header + rows +
+          '<p class="muted small">Filled pills = mistakes in that exam. The line links the same concept across exams. Red flag status: ' + flagText + ".</p>") +
+        '<div class="row end">' + ui.btn("Send practice pack", { go: "T6", primary: true, disabled: !st.committed }) + "</div>";
     }
   });
 })();

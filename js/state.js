@@ -1,34 +1,70 @@
-// Shared demo state: connects the student and teacher views.
+// Shared demo state: connects the student, teacher and parent views.
 // It is saved in the browser so a reload keeps your place; "Reset demo" starts over.
 
 window.LS = window.LS || {};
 
-LS.STORAGE_KEY = "lernspur-demo-v1";
+LS.STORAGE_KEY = "lernspur-demo-v2";
 
 LS.initialState = function () {
-  var answers = {};
-  var points = {};
-  LS.data.exam.questions.forEach(function (q) {
+  var d = LS.data, answers = {}, grade = {};
+  d.exam.questions.forEach(function (q) {
     answers[q.id] = q.ocr;
-    points[q.id] = q.aiPoints;
+    grade[q.id] = { status: q.hidden ? "accepted" : "open", points: q.ai, reason: null };
   });
   return {
     lang: "EN",
-    upload: "empty",        // empty | check | ok | sent
-    rescan: false,          // teacher asked for a new photo
+    readAloud: true,
+
+    // S2 upload
+    examLang: "DE",
+    pages: [],              // [{ status: "clear" | "blurry" }]
+    upload: "empty",        // empty | sent
+    rescan: false,
+
+    // T2 verify
+    answers: answers,
+    checked: {},            // q2: "accepted" | "corrected" | "flagged"
+    currentQ: "q2",
     ocrConfirmed: false,
-    answers: answers,       // OCR text, editable by the teacher
-    points: points,         // AI points, adjustable by the teacher
-    committed: false,       // grade confirmed by the teacher
-    flag: "open",           // open | confirmed | dismissed | observe
-    feedback: LS.data.feedbackDraft,
-    attach: true,
-    published: false,       // feedback sent to the student
-    seenNews: false,
+
+    // T3 grade
+    grade: grade,
+    fbVersion: "child",
+    fbEditing: false,
+    fbText: d.draft.child,
+    fbConfirmed: false,
+    committed: false,
+
+    // T4 evidence
+    mistakeType: "concept",
+    note: "",
+    flag: "open",           // open | confirmed | wait | dismissed
+    dismissReason: null,
+
+    // T6 feedback
+    sendTo: "student",
+    template: "New feedback",
+    well: d.feedback.well,
+    next: d.feedback.next,
+    packAttach: true,
+    packPick: [0, 0, 0],
+    ownQuestions: [],
+    draftSaved: false,
+    published: false,
+    preview: false,
+
+    // student
+    seenResult: false,
+    thanked: false,
+    view: "text",
     showPaper: false,
-    preview: false,         // teacher previews S3 before publishing
-    sheetsDone: 1,
-    hintLang: "EN"
+    showHelp: false,
+    practice: 2,            // questions done in the comparing-fractions pack
+
+    // parent
+    parentCompose: false,
+    parentMsg: "",
+    parentSent: false
   };
 };
 
@@ -51,17 +87,50 @@ LS.reset = function () {
 
 LS.state = LS.load();
 
-// Derived values used by several screens.
-LS.total = function () {
-  var s = 0;
-  LS.data.exam.questions.forEach(function (q) { s += LS.state.points[q.id]; });
-  return s;
+// ---------- derived values used by several screens ----------
+
+LS.q = function (id) { return LS.data.exam.questions.filter(function (q) { return q.id === id; })[0]; };
+LS.visibleQs = function () { return LS.data.exam.questions.filter(function (q) { return !q.hidden; }); };
+LS.uncertainQs = function () { return LS.data.exam.questions.filter(function (q) { return q.suspect; }); };
+LS.checkedCount = function () {
+  return LS.uncertainQs().filter(function (q) { return LS.state.checked[q.id]; }).length;
 };
 
-LS.examStatus = function () {
-  var st = LS.state;
-  if (st.published) return "Result ready";
-  if (st.rescan) return "Please send a new photo";
-  if (st.upload === "sent") return "Waiting for my teacher";
-  return "Ready to upload";
+LS.aiTotal = function () {
+  return LS.data.exam.questions.reduce(function (s, q) { return s + q.ai; }, 0);
 };
+LS.total = function () {
+  var g = LS.state.grade;
+  return LS.data.exam.questions.reduce(function (s, q) { return s + g[q.id].points; }, 0);
+};
+LS.pct = function (points) { return Math.round(points / LS.data.exam.maxPoints * 100); };
+LS.starsFor = function (points) { return Math.max(1, Math.floor(LS.pct(points) / 20)); };
+LS.scoreText = function (points) {
+  return LS.starsFor(points) + " of 5 stars - " + points + "/" + LS.data.exam.maxPoints + " (" + LS.pct(points) + " %)";
+};
+
+LS.allGraded = function () {
+  var g = LS.state.grade;
+  return LS.visibleQs().every(function (q) { return g[q.id].status !== "open"; });
+};
+
+// How the student should see each answer (S3).
+LS.answerLabel = function (q) {
+  var p = LS.state.grade[q.id].points;
+  if (p >= q.max) return "Right";
+  if (p === 0) return "Let's practise";
+  return "Partly right";
+};
+
+LS.photosOk = function () {
+  var p = LS.state.pages;
+  return p.length >= LS.data.exam.pagesExpected && p.every(function (x) { return x.status === "clear"; });
+};
+
+LS.unread = function () {
+  var st = LS.state;
+  return st.published && !st.seenResult ? (st.packAttach ? 2 : 1) : 0;
+};
+
+// Comparing-fractions mistakes in the current exam: 2 (Q2 and Q3) as in Figma.
+LS.flagClosed = function () { return LS.state.practice >= LS.data.pack.size; };

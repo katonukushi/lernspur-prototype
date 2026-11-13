@@ -1,70 +1,119 @@
-// T2 Verify OCR text (A-WF 02, LernSpur step 1)
-// T2 and T3 are the two phases of the same screen in A-WF 02: "1 OCR check > 2 Grading".
-// The shared page lives here, T3.js registers the grading phase.
+// T2 Verify OCR text (Figma frame "T2 - Verify OCR text", LernSpur step 1: confidence OCR)
+// The teacher goes through the uncertain answers one by one; AI grading starts only after every one is checked.
 
 (function () {
   var ui = LS.ui, d = LS.data;
   var zoom = 1;
 
-  LS.action("zoom", function (dir) { zoom = dir === "fit" ? 1 : Math.max(0.6, Math.min(1.8, zoom + (dir === "+" ? 0.2 : -0.2))); });
-  LS.action("confirmOcr", function () { LS.state.ocrConfirmed = true; return "T3"; });
-  LS.action("rescan", function () { LS.state.rescan = true; LS.state.upload = "empty"; LS.state.ocrConfirmed = false; return "T1"; });
-  LS.action("pts", function (arg) {
-    var p = arg.split(":"), q = d.exam.questions.filter(function (x) { return x.id === p[0]; })[0];
-    var v = LS.state.points[q.id] + (p[1] === "+" ? 1 : -1);
-    LS.state.points[q.id] = Math.max(0, Math.min(q.max, v));
+  function nextUnchecked(from) {
+    var list = LS.uncertainQs(), st = LS.state;
+    var start = list.findIndex(function (q) { return q.id === from; });
+    for (var i = 1; i <= list.length; i++) {
+      var q = list[(start + i) % list.length];
+      if (!st.checked[q.id]) return q.id;
+    }
+    return from;
+  }
+
+  function mark(how) {
+    var st = LS.state;
+    st.checked[st.currentQ] = how;
+    st.currentQ = nextUnchecked(st.currentQ);
+  }
+
+  LS.action("ocrAccept", function () { mark("accepted"); });
+  LS.action("ocrCorrect", function () { mark("corrected"); });
+  LS.action("ocrFlag", function () { mark("flagged"); });
+  LS.action("ocrSuggest", function (ch) {
+    var st = LS.state, q = LS.q(st.currentQ);
+    st.answers[q.id] = st.answers[q.id].replace(q.suspect, ch);
   });
-  LS.action("commit", function () { LS.state.committed = true; return "T4"; });
+  LS.action("ocrGo", function (id) { LS.state.currentQ = id; });
+  LS.action("ocrStep", function (dir) {
+    var list = LS.uncertainQs(), st = LS.state;
+    var i = list.findIndex(function (q) { return q.id === st.currentQ; });
+    st.currentQ = list[(i + (dir === "next" ? 1 : list.length - 1)) % list.length].id;
+  });
+  LS.action("zoom", function (dir) { zoom = Math.max(0.6, Math.min(1.8, zoom + (dir === "+" ? 0.2 : -0.2))); });
+  LS.action("rescan", function () {
+    var st = LS.state;
+    st.rescan = true; st.upload = "empty"; st.pages = []; st.checked = {};
+    return "T1";
+  });
+  LS.action("approveText", function () { LS.state.ocrConfirmed = true; return "T3"; });
 
-  LS.verifyPage = function (st, phase) {
-    var grading = phase === "grading";
-    var unsure = d.exam.questions.filter(function (q) { return q.lowConf; });
-
-    var notReady = st.upload !== "sent"
-      ? '<div class="banner info">No paper from Tim yet. ' + ui.btn("Go to student upload (S2)", { go: "S2", small: true }) + "</div>" : "";
-
-    var stepper = '<div class="stepper"><span class="' + (grading ? "" : "current") + '">1 OCR check</span> &gt; <span class="' + (grading ? "current" : "") + '">2 Grading</span></div>';
-
-    var scan = ui.card(
-      '<div class="row between"><h2>Original scan</h2><span class="row">' +
-        ui.btn("-", { action: "zoom", arg: "-", small: true }) + ui.btn("+", { action: "zoom", arg: "+", small: true }) + ui.btn("Fit", { action: "zoom", arg: "fit", small: true }) +
-      "</span></div>" +
-      '<div class="scan">' + ui.ph("scanned exam paper", Math.round(420 * zoom)) +
-        (st.ocrConfirmed ? "" : '<span class="scan-mark">low confidence</span>') + "</div>");
-
-    var banner = st.ocrConfirmed
-      ? '<div class="banner ok">OCR text confirmed. AI grading is unlocked.</div>'
-      : '<div class="banner warn"><b>' + unsure.length + " words with low confidence</b><br>Check the highlighted answers before grading.</div>";
-
-    var qs = d.exam.questions.map(function (q) {
-      var low = q.lowConf && !st.ocrConfirmed;
-      return ui.card(
-        '<div class="q-head"><b>' + q.label + "</b>" +
-          '<input class="field' + (low ? " lowconf" : "") + '" data-bind="answers.' + q.id + '" value="' + LS.esc(st.answers[q.id]) + '"' + (st.ocrConfirmed ? " readonly" : "") + ">" +
-        "</div>" +
-        (low ? '<p class="muted small">Unsure: "' + LS.esc(q.lowConf) + '"</p>' : "") +
-        '<div class="row"><span class="muted">AI points</span><b>' + st.points[q.id] + " / " + q.max + "</b>" +
-          ui.btn("-", { action: "pts", arg: q.id + ":-", small: true, disabled: !st.ocrConfirmed || st.committed }) +
-          ui.btn("+", { action: "pts", arg: q.id + ":+", small: true, disabled: !st.ocrConfirmed || st.committed }) +
-        "</div>" +
-        '<p><span class="muted">Reasoning:</span> ' + q.reasoning + "</p>", "q");
-    }).join("");
-
-    var actions = '<div class="row wrap">' +
-      ui.btn("Request re-scan", { action: "rescan", disabled: st.ocrConfirmed }) +
-      ui.btn("Confirm OCR text", { action: "confirmOcr", primary: !st.ocrConfirmed, disabled: st.ocrConfirmed }) +
-      ui.btn(st.committed ? "Grade committed" : "Commit grade", { action: "commit", primary: st.ocrConfirmed && !st.committed, disabled: !st.ocrConfirmed || st.committed }) +
-      "</div>" +
-      (grading ? '<p><b>Total: ' + LS.total() + " / " + d.exam.maxPoints + "</b></p>" : "");
-
-    return notReady + stepper +
-      '<div class="split wide-left">' + scan + '<div class="stack">' + banner + qs + actions + "</div></div>" +
-      ui.note("Commit grade is locked until the OCR text is confirmed. Changes are logged (audit trail).");
-  };
+  // The OCR text with the uncertain character marked.
+  function readText(q, text) {
+    if (!q.suspect || text.indexOf(q.suspect) < 0) return LS.esc(text);
+    var i = text.indexOf(q.suspect);
+    return LS.esc(text.slice(0, i)) + '<mark class="suspect">' + LS.esc(q.suspect) + "</mark>" + LS.esc(text.slice(i + q.suspect.length));
+  }
 
   LS.screen({
-    id: "T2", role: "teacher", title: "Verify OCR text", source: "A-WF 02",
-    crumbs: ["Grade 4B", "Math Test", "Tim Becker"],
-    render: function (st) { return LS.verifyPage(st, "ocr"); }
+    id: "T2", role: "teacher", nav: "Exams", title: "Verify OCR text", source: "Figma T2",
+    render: function (st) {
+      var unc = LS.uncertainQs();
+      var q = LS.q(st.currentQ);
+      var n = LS.checkedCount();
+      var done = st.ocrConfirmed;
+
+      if (st.upload !== "sent") {
+        return LS.teacherExamHead(ui.btn("Back to queue", { go: "T1" }), d.student.name + " - " + d.exam.title, 0, 0) +
+          '<div class="banner info">No paper to check. ' + (st.rescan ? "A re-scan was requested. " : d.student.name + " has not uploaded yet. ") +
+          ui.btn("Go to student upload (S2)", { go: "S2", small: true }) + "</div>";
+      }
+
+      var head = LS.teacherExamHead(ui.btn("Back to queue", { go: "T1" }), d.student.name + " - " + d.exam.title, 0, LS.teacherSteps()) +
+        '<div class="row wrap between sub-head"><div class="row"><b>Uncertain answers checked: ' + n + " of " + unc.length + "</b>" +
+          ui.progress(n, unc.length) + '<span class="muted small">All confidence values are [demo]</span></div>' +
+          '<div class="row">' + ui.pill("By student", { on: true }) + ui.pill("By question") + "</div></div>";
+
+      var scan = ui.card(
+        '<div class="row between"><h2>Scanned page 1 of 2 [demo]</h2><div class="row">' +
+          ui.btn("-", { action: "zoom", arg: "-", small: true }) + ui.btn("+", { action: "zoom", arg: "+", small: true }) + "</div></div>" +
+        ui.ph('Scanned exam paper (placeholder)<br><span class="region">' + q.label + " - linked region</span>", Math.round(300 * zoom)));
+
+      var others = d.exam.questions.filter(function (x) { return !x.hidden && x.id !== q.id; });
+      var otherList = ui.card("<h2>Other answers (" + others.length + ")</h2>" + others.map(function (x) {
+        var low = x.suspect && !st.checked[x.id];
+        var body = "<b>" + x.label + "</b> <span>" + LS.esc(st.answers[x.id]) + "</span>" + ui.conf(x.ocrConf) +
+          (st.checked[x.id] ? ui.pill(st.checked[x.id]) : "");
+        return x.suspect
+          ? '<button type="button" class="answer-row' + (low ? " low" : "") + '" data-action="ocrGo" data-arg="' + x.id + '">' + body + "</button>"
+          : '<div class="answer-row">' + body + "</div>";
+      }).join(""));
+
+      var status = st.checked[q.id];
+      var focus = ui.card(
+        '<div class="row between"><h2>' + q.label + " - " + (status ? "Checked (" + status + ")" : "Uncertain") +
+          ' <span class="muted small">' + (unc.indexOf(q) + 1) + " of " + unc.length + " uncertain</span></h2>" + ui.conf(q.ocrConf) + "</div>" +
+        '<p class="label">Handwriting (cropped)</p>' + ui.ph("cropped handwriting of " + q.label, 70) +
+        '<p class="label">What the system read (edit if wrong)</p>' +
+        '<div class="read-view">' + readText(q, st.answers[q.id]) + "</div>" +
+        '<input class="field" data-bind="answers.' + q.id + '" value="' + LS.esc(st.answers[q.id]) + '" aria-label="Edit the read text"' + (done ? " readonly" : "") + ">" +
+        '<div class="row wrap"><span class="label">Did you mean:</span>' +
+          q.suggestions.map(function (s) { return ui.pill(s + " [demo]", { action: "ocrSuggest", arg: s, disabled: done }); }).join("") + "</div>" +
+        '<p class="label">Working steps read</p>' +
+        q.steps.map(function (s) {
+          return '<div class="step-row' + (s.sure ? "" : " low") + '"><span>' + s.text + " [demo]</span>" + ui.pill(s.sure ? "Sure" : "Unsure - check", { kind: s.sure ? "" : "low" }) + "</div>";
+        }).join("") +
+        '<div class="row wrap">' +
+          ui.btn("Accept", { action: "ocrAccept", primary: true, disabled: done }) +
+          ui.btn("Correct", { action: "ocrCorrect", disabled: done, title: "Save your edit of the text" }) +
+          ui.btn("Can't read - flag", { action: "ocrFlag", disabled: done, title: "Mark this answer by hand" }) +
+        "</div>", "emph focus");
+
+      var allChecked = n === unc.length;
+      var bar = ui.actions(
+        ui.btn("Previous uncertain", { action: "ocrStep", arg: "prev" }) +
+        ui.btn("Next uncertain", { action: "ocrStep", arg: "next", primary: true }) +
+        ui.btn("Request re-scan", { action: "rescan", disabled: done }) +
+        ui.hint(done ? "Text approved. AI grading is done." : allChecked ? "All uncertain answers checked." : "Check all uncertain answers to continue."),
+        done ? ui.btn("Go to grading", { go: "T3", primary: true })
+             : ui.btn("Approve text and start AI grading", { action: "approveText", primary: true, disabled: !allChecked }));
+
+      return head + '<div class="split even">' + '<div class="stack">' + scan + otherList + "</div>" + focus + "</div>" + bar +
+        ui.note("Grading is locked until the OCR text is approved. Changes are logged.");
+    }
   });
 })();

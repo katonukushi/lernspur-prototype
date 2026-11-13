@@ -35,42 +35,44 @@ python3 -m http.server 8000
 The dark bar at the bottom contains demo controls, they are not part of the product.
 Click the numbered steps from left to right, or follow the flow inside the app:
 
-1. **Student, S2:** "Take a photo", then "Retake" (the first photo is always too dark), then "Send to my teacher".
-2. **Teacher, T1:** open Tim's paper in the inbox.
-3. **Teacher, T2:** check the highlighted low-confidence answers, then "Confirm OCR text".
-4. **Teacher, T3:** adjust AI points if needed, then "Commit grade".
-5. **Teacher, T4:** review the learning gap across tests, confirm, dismiss or observe the red flag.
-6. **Teacher, T6:** edit the feedback, optionally "Preview as pupil", then "Publish feedback".
-7. **Student, S1:** a new notification appears, open the result (S3) and the progress page (S4).
+1. **Student, S2:** take two photos (the second one is always blurry), retake it, then "Send to my teacher".
+2. **Teacher, T1:** press "Verify" in Tim's row of the exams queue.
+3. **Teacher, T2:** check both uncertain answers (accept, correct or pick a "Did you mean" suggestion), then "Approve text and start AI grading".
+4. **Teacher, T3:** accept or override every AI grade (override needs a reason), confirm the feedback draft, then "Confirm grade".
+5. **Teacher, T4:** review the evidence across exams and confirm, wait on or dismiss the red flag.
+6. **Teacher, T5:** see the Learning Trail, then "Send practice pack".
+7. **Teacher, T6:** edit the feedback, adjust the practice pack, optionally "Preview as pupil", then "Publish to student".
+8. **Student, S1 / S3 / S4:** the bell shows the new messages; open the result, then finish the practice pack.
+9. **Parent, P1:** sees the checked grade and, once the practice pack is done, that the concern is resolved.
 
 "Reset demo" starts over.
-"Notes" shows or hides the annotations carried over from the wireframes.
+"Notes" shows or hides the screen IDs and annotations.
 "Hide" or the D key hides the demo bar, for example to record the walkthrough video.
 
 ## Screens
 
 | ID | Screen | Source |
 |---|---|---|
-| S1 | Student home + notifications | wireframe 05 |
-| S2 | Upload / scan exam | wireframe 01 |
-| S3 | Results with child-friendly feedback | wireframe 04 |
-| S4 | My Trail: progress across exams | wireframe 06 |
-| T1 | Teacher inbox | wireframe 07 |
-| T2 | Verify OCR text | wireframe 02, phase 1 |
-| T3 | Confirm or override AI grade | wireframe 02, phase 2 |
-| T4 | Learning gaps + red flag | wireframe 03, upper part |
-| T5 | Student profile with the Learning Trail | placeholder, design open |
-| T6 | Send feedback and practice | wireframe 03, lower part |
-| P1 | Parent summary (bonus) | placeholder, design open |
+| S1 | Student home + notifications | Figma S1 |
+| S2 | Upload exam (multi-page, photo check, exam language) | Figma S2 |
+| S3 | Results with child-friendly feedback | Figma S3 |
+| S4 | My Trail: progress across exams + practice packs | Figma S4 |
+| T1 | Teacher dashboard + exams queue | Figma T1 |
+| T2 | Verify OCR text (confidence OCR) | Figma T2 |
+| T3 | Confirm or override AI grade + feedback draft | Figma T3 |
+| T4 | Evidence Trail: learning gap + red flag across exams | Figma T4 |
+| T5 | Learning Trail of one student | Figma T5 |
+| T6 | Feedback and practice pack | Figma T6 |
+| P1 | Parent summary (bonus) | Figma P1 |
 
-The wireframes are the team's Milestone 2 deliverables.
+The screens follow the team's Figma skeletons ("LernSpur - M3 Prototype"), which build on our Milestone 2 wireframes.
 
 ## Project structure
 
 ```
 index.html            loads everything, in order
 css/base.css          layout only: columns, spacing, rough positions
-css/themes/wire.css   the current low-fi look: colors, fonts, borders
+css/themes/wire.css   the current low-fi look (grayscale, as in Figma): colors, fonts, borders
 css/demo.css          the demo bar (not part of the product)
 js/data.js            all demo content (exam, OCR text, feedback, progress)
 js/state.js           shared demo state that links the student and teacher views
@@ -83,17 +85,18 @@ js/screens/*.js       one file per screen ID
 
 - **Text or demo content:** edit `js/data.js`.
 - **One screen:** edit `js/screens/<ID>.js`. Each screen is a function that returns HTML.
+- **Behaviour between screens:** the shared demo state is in `js/state.js`; buttons call named actions defined next to their screen.
 - **Order or position on a screen:** move blocks inside the screen file. The column helpers are `split` (1:2), `split even` (1:1) and `split wide-left` (3:2) in `css/base.css`.
 - **The whole look:** edit `css/themes/wire.css`, or add a new theme:
   1. Copy `css/themes/wire.css` to `css/themes/<name>.css` and change it.
   2. Add `"<name>"` to `LS.THEMES` in `js/app.js`.
   3. Pick it in the demo bar, or open `index.html?theme=<name>`.
 
-Screens only use semantic class names (`card`, `btn primary`, `banner warn`, `chip ok`, `ph`, `note` ...).
+Screens only use semantic class names (`card`, `btn primary`, `pill on`, `banner ok`, `conf low`, `ph`, `note` ...).
 A theme decides how these look, so the design can change without touching any screen.
 
 ## AI assistance
 
 This prototype was coded with the help of an AI assistant (Claude, Anthropic).
-The interaction design comes from the team's wireframes and decisions; the AI translated them into HTML, CSS and JavaScript.
+The interaction design comes from the team's wireframes, Figma skeletons and decisions; the AI translated them into HTML, CSS and JavaScript.
 The full chat history is part of the Milestone 3 submission, as required by the course.
