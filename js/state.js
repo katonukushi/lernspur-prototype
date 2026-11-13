@@ -60,6 +60,7 @@ LS.initialState = function () {
     showPaper: false,
     showHelp: false,
     practice: 2,            // questions done in the comparing-fractions pack
+    focusClosed: false,     // only the teacher closes the support focus (T5)
 
     // parent
     parentCompose: false,
@@ -132,5 +133,7 @@ LS.unread = function () {
   return st.published && !st.seenResult ? (st.packAttach ? 2 : 1) : 0;
 };
 
-// Comparing-fractions mistakes in the current exam: 2 (Q2 and Q3) as in Figma.
-LS.flagClosed = function () { return LS.state.practice >= LS.data.pack.size; };
+// The child finished the practice pack (S4).
+LS.packDone = function () { return LS.state.practice >= LS.data.pack.size; };
+// The teacher closed the support focus after the pack (T5). Only the teacher can do this.
+LS.flagClosed = function () { return LS.state.focusClosed && LS.packDone(); };

@@ -137,7 +137,7 @@ button.answer-row:hover { border-color: var(--line-strong); }
 .cell { border: 1px solid var(--line); border-radius: 4px; font-size: 11px; font-weight: 700; color: var(--muted); }
 .cell.hit { background: var(--soft); border-color: #9a9a9a; color: var(--ink); }
 .cell.dashed { border-style: dashed; }
-.card.focus { border-left: 4px solid var(--line-strong); }
+.card.focus-card { border-left: 4px solid var(--line-strong); }
 .card.dashed { border: 1.5px dashed #9a9a9a; background: transparent; }
 .eighths i { background: #dedede; border-radius: 4px; }
 .eighths i.on { background: var(--accent); }
@@ -149,3 +149,6 @@ button.answer-row:hover { border-color: var(--line-strong); }
 .sheet { background: var(--surface); border-radius: 16px 16px 0 0; box-shadow: 0 -4px 24px rgba(0, 0, 0, .15); }
 .sheet .grabber { background: #bdbdbd; border-radius: 2px; }
 .icon-btn { background: none; border: 0; font-size: 18px; color: var(--ink); }
+.check-ic { border: 2px solid #9a9a9a; border-radius: 50%; font-size: 13px; font-weight: 700; color: var(--accent-ink); }
+.check-ic.on { background: var(--accent); border-color: var(--accent); }
+.tile-icon { background: var(--soft); border-radius: 8px; color: var(--ink); }

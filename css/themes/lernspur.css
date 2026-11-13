@@ -1,0 +1,47 @@
+/* Theme "lernspur": the designed look from the Figma file (page "00 Foundations", variables "LernSpur").
+   Builds on the low-fi theme and only swaps tokens and the few places that need the brand color.
+   Token names in comments match the Figma variables. */
+
+@import url("wire.css");
+
+:root {
+  --bg: #f4f5f2;          /* color/bg/page */
+  --surface: #ffffff;     /* color/bg/surface */
+  --soft: #f4f5f2;        /* color/bg/subtle */
+  --selected: #e7edf3;    /* color/bg/selected */
+  --ink: #1d2320;         /* color/text/primary */
+  --muted: #59615c;       /* color/text/secondary */
+  --line: #d5d9d3;        /* color/border/default */
+  --line-strong: #59615c; /* buttons and outlines */
+  --accent: #2d4a6b;      /* color/action/primary */
+  --accent-ink: #ffffff;  /* color/text/on-action */
+  --low: #b03a1a;         /* color/status/confidence-low */
+  --low-bg: #fbe8df;      /* color/status/confidence-low-bg */
+  --ok-bg: #e4f0ec;
+  --info-bg: #e7edf3;
+  --radius: 12px;         /* radius/lg */
+}
+
+.logo { background: var(--accent); border-radius: 8px; }
+.avatar { background: var(--selected); color: var(--ink); }
+.sidenav a.on { background: var(--selected); box-shadow: inset 3px 0 0 var(--accent); }
+.btn { border-color: #8a928c; }
+.btn.active, .seg button.on { background: var(--selected); color: var(--ink); }
+.btn.primary:hover { background: #22394f; border-color: #22394f; }
+.pill.on { background: var(--selected); border-color: var(--accent); }
+.seg { border-color: #8a928c; }
+.card.emph, .card.focus-card { border-color: var(--accent); }
+.card.focus-card { border-left-color: var(--accent); }
+.stepper li.current { border-color: var(--accent); background: var(--selected); }
+.conf.high .conf-bar > span { background: #2b7a6f; }
+.conf.medium .conf-bar > span { background: #a87a00; }
+.conf-bar, .progress, .eighths i { background: #e3e6e1; }
+.eighths i.on, .progress > span { background: var(--accent); }
+.tile-icon { background: var(--selected); color: var(--accent); }
+.thumb.on { border-color: var(--accent); }
+.dots i.on { background: var(--accent); border-color: var(--accent); }
+.trail-line { background: var(--accent); }
+.bar { background: var(--selected); border-color: var(--accent); }
+.table tr.hl td { background: var(--soft); }
+a.card:hover, button.answer-row:hover { border-color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }

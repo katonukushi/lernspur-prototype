@@ -171,3 +171,7 @@ textarea.field { resize: vertical; }
 .parent-head { margin-bottom: var(--gap-s); }
 .parent-head h1 { margin-bottom: 4px; }
 .pill .check { margin-right: 4px; }
+.check-ic { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; flex: 0 0 24px; }
+.focus-steps { margin: var(--gap-s) 0; }
+.focus-steps .soft-box { margin: 0; }
+.tile-icon { display: flex; align-items: center; justify-content: center; min-height: 90px; margin-bottom: var(--gap-s); }

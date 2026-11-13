@@ -41,7 +41,7 @@
       var text = ui.card("<h2>Feedback to the student (suggested, edit freely)</h2>" +
         '<p class="label">What went well</p><input class="field" data-bind="well" data-live value="' + LS.esc(st.well) + '"' + (locked ? " readonly" : "") + ">" +
         '<p class="label">Next step</p><input class="field" data-bind="next" data-live value="' + LS.esc(st.next) + '"' + (locked ? " readonly" : "") + ">" +
-        '<div class="row between wrap"><span class="muted small">2 sentences - Grade 4 reading level [demo]</span><div class="row wrap">' +
+        '<div class="row between wrap"><span class="muted small">2 sentences - Grade 4 reading level</span><div class="row wrap">' +
           ui.btn("Shorter", { action: "variant", arg: "shorter", disabled: locked }) +
           ui.btn("Simpler words", { action: "variant", arg: "simpler", disabled: locked }) +
           ui.btn("In German", { action: "variant", arg: "german", disabled: locked }) + "</div></div>");

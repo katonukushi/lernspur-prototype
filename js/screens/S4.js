@@ -13,18 +13,18 @@
         var stars = e.current ? (st.published ? LS.starsFor(LS.total()) : null) : e.stars;
         return (i ? '<span class="trail-line"></span>' : "") +
           '<div class="card inner exam-card"><p class="muted small">' + e.label + " · " + e.date + "</p>" +
-          (stars ? '<p class="big-stars">' + ui.stars(stars) + '</p><p class="small">' + stars + " " + t("of 5 stars", "von 5 Sternen") + (e.current ? "" : " [demo]") + "</p>"
+          (stars ? '<p class="big-stars">' + ui.stars(stars) + '</p><p class="small">' + stars + " " + t("of 5 stars", "von 5 Sternen") + (e.current ? "" : "") + "</p>"
                  : '<p class="small muted">' + t("Your teacher is checking", "Wird angeschaut") + "</p>") + "</div>";
       }).join("");
 
       var hasPack = st.published && st.packAttach;
-      var done = LS.flagClosed();
+      var done = LS.packDone();
       var growing = [{ name: t("Comparing fractions", "Brüche vergleichen"), done: st.practice, of: d.pack.size }].concat(d.skillsGrowing);
 
       var packs = d.otherPacks.map(function (p) {
-        return '<div class="item-row"><b>[x] ' + p.name + "</b><span>" + t("Done", "Fertig") + "</span></div>";
+        return '<div class="item-row"><b class="row">' + ui.check(true, p.name) + p.name + "</b><span>" + t("Done", "Fertig") + "</span></div>";
       }).join("") + (hasPack
-        ? '<div class="item-row"><div><b>' + (done ? "[x] " : "[ ] ") + t("Comparing fractions", "Brüche vergleichen") + '</b><p class="muted small">' + t("From", "Von") + " " + d.teacher.name + "</p></div>" +
+        ? '<div class="item-row"><div><b class="row">' + ui.check(done) + t("Comparing fractions", "Brüche vergleichen") + '</b><p class="muted small">' + t("From", "Von") + " " + d.teacher.name + "</p></div>" +
             (done ? "<span>" + t("Done", "Fertig") + "</span>"
                   : ui.btn(st.practice > 2 ? t("Next question", "Nächste Frage") + " (" + st.practice + "/" + d.pack.size + ")" : t("Start", "Los"), { action: "practise", primary: true })) + "</div>"
         : '<p class="muted small">' + t("New packs from your teacher show up here.", "Neue Pakete von deiner Lehrerin erscheinen hier.") + "</p>");

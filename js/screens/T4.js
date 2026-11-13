@@ -21,7 +21,7 @@
       var n = counts[i];
       return (i ? '<span class="trail-line"></span>' : "") +
         '<span class="trail-cell">' + ui.pill(n + (n === 1 ? " mistake" : " mistakes"), { kind: n ? "dark" : "" }) +
-        (withLabels ? '<span class="muted tiny">' + e.label + " · " + e.date + " · " + (e.current ? LS.state.examLang : e.lang) + (e.current ? "" : " [demo]") + "</span>" : "") +
+        (withLabels ? '<span class="muted tiny">' + e.label + " · " + e.date + " · " + (e.current ? LS.state.examLang : e.lang) + (e.current ? "" : "") + "</span>" : "") +
         "</span>";
     }).join("") + "</div>";
   };

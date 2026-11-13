@@ -36,7 +36,7 @@
       var rows = timRow + d.queue.map(function (r) {
         return "<tr><td>" + r.student + "</td><td>" + r.exam + "</td><td>" + r.lang + "</td><td>" + r.uploaded + "</td>" +
           "<td>" + ui.pill(r.status) + "</td><td>" + r.uncertain + "</td>" +
-          "<td>" + ui.btn(r.kind === "ocr" ? "Verify" : r.kind === "grade" ? "Review" : "Open", { disabled: true, title: "Sample row [demo]" }) + "</td></tr>";
+          "<td>" + ui.btn(r.kind === "ocr" ? "Verify" : r.kind === "grade" ? "Review" : "Open", { disabled: true, title: "Sample row" }) + "</td></tr>";
       }).join("");
 
       var weak = st.committed
@@ -48,8 +48,8 @@
         (hasTim ? "" : '<div class="banner info">' + d.student.name + " has not uploaded the Fractions Quiz yet. " +
           ui.btn("Go to student upload (S2)", { go: "S2", small: true }) + "</div>") +
         '<div class="grid-3">' +
-          stat(needOcr + " [demo]", "Need OCR check", "Start", hasTim && tim.go === "T2" ? "T2" : null) +
-          stat(toConfirm + " [demo]", "Grades to confirm", "Review", hasTim && tim.go === "T3" ? "T3" : null) +
+          stat(needOcr + "", "Need OCR check", "Start", hasTim && tim.go === "T2" ? "T2" : null) +
+          stat(toConfirm + "", "Grades to confirm", "Review", hasTim && tim.go === "T3" ? "T3" : null) +
           stat(flags, "Red flags to review", "Review", flags ? "T4" : null) +
         "</div>" +
         '<div class="split wide-left">' +
@@ -57,8 +57,7 @@
               ui.pill("Class: 4B v") + ui.pill("Subject: Math v") + ui.pill("Status: Pending v") + ui.pill("Sort: most uncertain OCR items v", { on: true }) +
             "</div>" +
             '<div class="table-wrap"><table class="table"><thead><tr><th>Student</th><th>Exam</th><th>Lang</th><th>Uploaded</th><th>Status</th><th>Uncertain OCR items</th><th></th></tr></thead>' +
-            "<tbody>" + rows + "</tbody></table></div>" +
-            '<p class="muted small">Rows other than ' + d.student.name + " are sample data [demo].</p>") +
+            "<tbody>" + rows + "</tbody></table></div>") +
           ui.card("<h2>Recurring weaknesses (suggested)</h2>" + weak) +
         "</div>";
     }

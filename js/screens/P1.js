@@ -96,7 +96,7 @@
       // ---------- support focus (confirmed red flag) + practice mission ----------
       var focusCards = "";
       if (pub && st.flag === "confirmed") {
-        var closed = LS.flagClosed();
+        var closed = LS.flagClosed(), packDone = LS.packDone();
         focusCards = ui.card(
           '<div class="card-head"><h2>' + t("From", "Von") + " " + d.teacher.name + "</h2></div>" +
           ui.pill(closed ? t("Support focus · finished", "Förderschwerpunkt · abgeschlossen") : t("Support focus · confirmed", "Förderschwerpunkt · bestätigt"), { kind: "on" }) +
@@ -106,17 +106,17 @@
             '<p class="small"><b>' + t("How you can help at home:", "So können Sie zu Hause helfen:") + "</b> " + t(d.parent.helpAtHome, "Zeichnen Sie zwei gleich lange Balken und teilen Sie beide in gleich große Teile. Vergleichen Sie dann die gefärbten Teile.") + "</p></div>" +
           fractionBar("3/4 = 6/8", 6) + fractionBar("5/8", 5) +
           '<p class="muted tiny">' + t("Six equal eighths are more than five, so 3/4 is bigger than 5/8.", "Sechs gleiche Achtel sind mehr als fünf, also ist 3/4 größer als 5/8.") + "</p>",
-          "focus");
+          "focus-card");
 
         var steps = [
           { state: "done", title: t("Assigned", "Zugewiesen") + " · " + d.parent.confirmed, sub: t("Tim can open it in his own view", "Tim findet es in seiner eigenen Ansicht") },
-          { state: closed ? "done" : "current", title: closed ? t("Tim finished the practice", "Tim hat fertig geübt") : t("Tim is practising", "Tim übt") + " · " + st.practice + " " + t("of", "von") + " " + d.pack.size + " " + t("done", "geschafft"), progress: !closed },
-          { state: closed ? "done" : "next", title: closed ? d.teacher.name + " " + t("closed the focus", "hat den Schwerpunkt abgeschlossen") : d.teacher.name + " " + t("checks and closes the focus", "prüft und schließt den Schwerpunkt ab"),
+          { state: packDone ? "done" : "current", title: packDone ? t("Tim finished the practice", "Tim hat fertig geübt") : t("Tim is practising", "Tim übt") + " · " + st.practice + " " + t("of", "von") + " " + d.pack.size + " " + t("done", "geschafft"), progress: !packDone },
+          { state: closed ? "done" : packDone ? "current" : "next", title: closed ? d.teacher.name + " " + t("closed the focus", "hat den Schwerpunkt abgeschlossen") : d.teacher.name + " " + t("checks and closes the focus", "prüft und schließt den Schwerpunkt ab"),
             sub: t("Only the teacher can close a support focus. Practice never changes exam scores.", "Nur die Lehrkraft schließt einen Förderschwerpunkt ab. Üben ändert nie Prüfungsnoten.") }
         ];
         focusCards += ui.card(
           '<div class="card-head"><h2>' + t("Practice mission", "Übungsmission") + "</h2></div>" +
-          ui.pill(closed ? t("Finished", "Fertig") : t("In progress", "Läuft")) +
+          ui.pill(closed ? t("Finished", "Fertig") : packDone ? t("Waiting for", "Wartet auf") + " " + d.teacher.name : t("In progress", "Läuft")) +
           "<h3>" + d.pack.title + "</h3>" +
           '<p class="muted tiny">' + d.pack.size + " " + t("short questions with fraction bars · assigned by", "kurze Fragen mit Bruchbalken · zugewiesen von") + " " + d.teacher.name + "</p>" +
           '<ol class="mission">' + steps.map(function (s) {

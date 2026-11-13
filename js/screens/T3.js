@@ -35,7 +35,7 @@
         (g.status === "accepted" && !locked ? ui.btn("Undo", { action: "gUndo", arg: q.id, small: true }) : "") + "</div>";
     }
     head += "</div>";
-    var why = '<div class="row between wrap"><span class="small">Why: ' + q.why + ' <span class="muted">[demo]</span></span>' +
+    var why = '<div class="row between wrap"><span class="small">Why: ' + q.why + '</span>' +
       '<span class="row small"><span class="muted">AI sure?</span>' + ui.conf(q.aiSure) + "</span></div>";
     var reason = g.status === "overridden"
       ? '<div class="row wrap"><span class="muted small">Reason:</span>' + d.overrideReasons.map(function (r) {

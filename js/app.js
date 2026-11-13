@@ -3,7 +3,7 @@
 
 window.LS = window.LS || {};
 
-LS.THEMES = ["wire"];   // file names in css/themes/. Add the final design theme here when it is ready.
+LS.THEMES = ["lernspur", "wire"];   // file names in css/themes/. "lernspur" = Figma design, "wire" = low-fi skeleton look.
 LS.DEFAULT_SCREEN = "S1";
 
 // The 9 workflow steps from the project brief, mapped to screens.
@@ -20,7 +20,7 @@ LS.FLOW = [
 ];
 
 LS.prefs = (function () {
-  var p = { theme: "wire", notes: true, demo: true };
+  var p = { theme: "lernspur", notes: true, demo: true };
   try { Object.assign(p, JSON.parse(localStorage.getItem("lernspur-prefs") || "{}")); } catch (e) { /* ignore */ }
   var q = new URLSearchParams(location.search);
   if (q.get("theme")) p.theme = q.get("theme");

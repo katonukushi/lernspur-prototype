@@ -78,6 +78,11 @@ LS.ui = {
     return '<span class="progress"><span style="width:' + Math.round(done / of * 100) + '%"></span></span>';
   },
 
+  // Done / not done mark for checklists. Meaning is in the label, not only in the icon.
+  check: function (on, label) {
+    return '<span class="check-ic' + (on ? " on" : "") + '" role="img" aria-label="' + (on ? "Done" : "Not done") + (label ? ": " + LS.esc(label) : "") + '">' + (on ? "✓" : "") + "</span>";
+  },
+
   stars: function (n, max) {
     var s = "";
     for (var i = 0; i < (max || 5); i++) s += i < n ? "★" : "☆";

@@ -2,7 +2,7 @@
 // Everything here is simulated: no real OCR, no real AI, no real people.
 // Content follows the team's Figma skeletons ("LernSpur - M3 Prototype") and the demo story in M3_Base, section 6:
 // one student, one concept (comparing fractions, "5/8 is bigger than 3/4"), exams in German and English.
-// Values marked [demo] in Figma are invented sample data.
+// All names, exams and numbers are invented sample data.
 
 window.LS = window.LS || {};
 
@@ -21,7 +21,7 @@ LS.data = {
     uploaded: "Oct 9, 14:10",
     pagesExpected: 2,
     maxPoints: 25,
-    shownNote: "Q1-Q3 of 5 shown [demo]",
+    shownNote: "Q1-Q3 of 5 shown",
     questions: [
       { id: "q1", label: "Q1", ocr: "3/4 ist größer als 2/3", ocrConf: 96, max: 5, ai: 5, aiSure: 94,
         why: "Correct comparison." },
@@ -50,7 +50,7 @@ LS.data = {
   // Feedback draft on T3, in three versions.
   draft: {
     teacher: "{score}. Strong in multiplication and word problems. Recurring error: compares the denominators only (3 exams).",
-    child: "Great job, Tim!\nYou compared most fractions correctly. [demo]\nLet's practise: comparing fractions with different bottom numbers.",
+    child: "Great job, Tim!\nYou compared most fractions correctly.\nLet's practise: comparing fractions with different bottom numbers.",
     parent: "Tim did well in multiplication. He is practising how to compare fractions."
   },
 
@@ -63,16 +63,16 @@ LS.data = {
   ],
   trail: [
     { concept: "Comparing fractions", mistakes: [0, 2, 1, 2] },
-    { concept: "Multiplication [demo]", mistakes: [0, 0, 0, 0] }
+    { concept: "Multiplication", mistakes: [0, 0, 0, 0] }
   ],
   flag: {
     title: "Requires additional support in fractions",
     concept: "Comparing fractions",
-    why: "The same concept was wrong in 3 of the last 4 exams. Careless slips are not counted. [demo rule]",
-    trend: "Score trend in fractions: 80 % → 72 % [demo]",
+    why: "The same concept was wrong in 3 of the last 4 exams. Careless slips are not counted.",
+    trend: "Score trend in fractions: 80 % → 72 %",
     answers: [
-      { exam: "Test 1 · Q4 · Oct 2", read: "5/8 > 3/4 [demo]", note: "Compared denominators only" },
-      { exam: "Test 2 · Q3 · Oct 6", read: "2/3 < 2/5 [demo]", note: "Compared denominators only" },
+      { exam: "Test 1 · Q4 · Oct 2", read: "5/8 > 3/4", note: "Compared denominators only" },
+      { exam: "Test 2 · Q3 · Oct 6", read: "2/3 < 2/5", note: "Compared denominators only" },
       { exam: "Fractions Quiz · Q2 · Oct 9", read: "5/8 > 3/4", note: "Compared denominators only" }
     ]
   },
@@ -91,25 +91,25 @@ LS.data = {
       "Practice reminder": { well: "Great start on your practice pack!", next: "Please finish the last questions this week." },
       "Praise": { well: "Super work on this quiz, Tim!", next: "Keep going like this." }
     },
-    groupLabel: "Group: comparing fractions (3 pupils) [demo]"
+    groupLabel: "Group: comparing fractions (3 pupils)"
   },
   pack: {
     title: "Practice pack: comparing fractions",
     items: [
-      ["Which is bigger: 1/2 or 1/4? [demo]", "Which is bigger: 2/3 or 3/5? [demo]"],
-      ["Which is bigger: 3/8 or 3/4? [demo]", "Which is bigger: 5/6 or 7/12? [demo]"],
-      ["Put in order: 2/3, 2/6, 2/5 [demo]", "Put in order: 1/2, 3/4, 1/8 [demo]"]
+      ["Which is bigger: 1/2 or 1/4?", "Which is bigger: 2/3 or 3/5?"],
+      ["Which is bigger: 3/8 or 3/4?", "Which is bigger: 5/6 or 7/12?"],
+      ["Put in order: 2/3, 2/6, 2/5", "Put in order: 1/2, 3/4, 1/8"]
     ],
     size: 5
   },
 
   // Student side (S1-S4).
-  message: "\"Nice try on Q2! Look at the bottom number too.\" [demo]",
-  example: "Example: 3/4 = 6/8, and 6/8 is more than 5/8. So 3/4 is bigger! [demo]",
-  extraHelp: "Frau Weber will sit with you on Monday and look at fractions together. [demo]",
-  skillsGot: ["Multiplication", "Word problems", "Reading clocks [demo]"],
-  skillsGrowing: [{ name: "Adding fractions [demo]", done: 4, of: 5 }],
-  otherPacks: [{ name: "Times tables [demo]", done: true }],
+  message: "\"Nice try on Q2! Look at the bottom number too.\"",
+  example: "Example: 3/4 = 6/8, and 6/8 is more than 5/8. So 3/4 is bigger!",
+  extraHelp: "Frau Weber will sit with you on Monday and look at fractions together.",
+  skillsGot: ["Multiplication", "Word problems", "Reading clocks"],
+  skillsGrowing: [{ name: "Adding fractions", done: 4, of: 5 }],
+  otherPacks: [{ name: "Times tables", done: true }],
 
   // Parent side (P1, phone). Layout and wording from Leena's P1 wireframes (13.11.).
   parent: {

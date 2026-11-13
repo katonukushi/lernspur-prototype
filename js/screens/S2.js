@@ -29,7 +29,7 @@
       var step = sent ? 3 : ok ? 2 : 1;
       var stepper = ui.stepper([t("Choose exam", "Prüfung wählen"), t("Take photos", "Fotos machen"), t("Check", "Prüfen"), t("Send", "Senden")], step, step);
 
-      var info = ui.card("<h2>" + d.exam.title + " · " + d.exam.date + " · " + d.exam.pagesExpected + " " + t("pages expected", "Seiten erwartet") + " [demo]</h2>" +
+      var info = ui.card("<h2>" + d.exam.title + " · " + d.exam.date + " · " + d.exam.pagesExpected + " " + t("pages expected", "Seiten erwartet") + "</h2>" +
         '<div class="row wrap"><span class="muted">' + t("My exam is in:", "Meine Prüfung ist auf:") + "</span>" +
           ui.pill((st.examLang === "EN" ? "(o)" : "( )") + " English", { action: "examLang", arg: "EN", on: st.examLang === "EN", disabled: sent }) +
           ui.pill((st.examLang === "DE" ? "(o)" : "( )") + " Deutsch", { action: "examLang", arg: "DE", on: st.examLang === "DE", disabled: sent }) + "</div>");

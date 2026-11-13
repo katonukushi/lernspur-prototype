@@ -22,7 +22,12 @@
   }
 
   LS.action("ocrAccept", function () { mark("accepted"); });
-  LS.action("ocrCorrect", function () { mark("corrected"); });
+  // "Correct" opens the edit field; the second click saves the correction.
+  LS.action("ocrCorrect", function () {
+    var st = LS.state;
+    if (st.ocrEdit !== st.currentQ) { st.ocrEdit = st.currentQ; return; }
+    st.ocrEdit = null; mark("corrected");
+  });
   LS.action("ocrFlag", function () { mark("flagged"); });
   LS.action("ocrSuggest", function (ch) {
     var st = LS.state, q = LS.q(st.currentQ);
@@ -65,11 +70,11 @@
 
       var head = LS.teacherExamHead(ui.btn("Back to queue", { go: "T1" }), d.student.name + " - " + d.exam.title, 0, LS.teacherSteps()) +
         '<div class="row wrap between sub-head"><div class="row"><b>Uncertain answers checked: ' + n + " of " + unc.length + "</b>" +
-          ui.progress(n, unc.length) + '<span class="muted small">All confidence values are [demo]</span></div>' +
+          ui.progress(n, unc.length) + "</div>" +
           '<div class="row">' + ui.pill("By student", { on: true }) + ui.pill("By question") + "</div></div>";
 
       var scan = ui.card(
-        '<div class="row between"><h2>Scanned page 1 of 2 [demo]</h2><div class="row">' +
+        '<div class="row between"><h2>Scanned page 1 of 2</h2><div class="row">' +
           ui.btn("-", { action: "zoom", arg: "-", small: true }) + ui.btn("+", { action: "zoom", arg: "+", small: true }) + "</div></div>" +
         ui.ph('Scanned exam paper (placeholder)<br><span class="region">' + q.label + " - linked region</span>", Math.round(300 * zoom)));
 
@@ -90,16 +95,16 @@
         '<p class="label">Handwriting (cropped)</p>' + ui.ph("cropped handwriting of " + q.label, 70) +
         '<p class="label">What the system read (edit if wrong)</p>' +
         '<div class="read-view">' + readText(q, st.answers[q.id]) + "</div>" +
-        '<input class="field" data-bind="answers.' + q.id + '" value="' + LS.esc(st.answers[q.id]) + '" aria-label="Edit the read text"' + (done ? " readonly" : "") + ">" +
+        (st.ocrEdit === q.id && !done ? '<input class="field" data-bind="answers.' + q.id + '" value="' + LS.esc(st.answers[q.id]) + '" aria-label="Edit the read text">' : "") +
         '<div class="row wrap"><span class="label">Did you mean:</span>' +
-          q.suggestions.map(function (s) { return ui.pill(s + " [demo]", { action: "ocrSuggest", arg: s, disabled: done }); }).join("") + "</div>" +
+          q.suggestions.map(function (s) { return ui.pill(s, { action: "ocrSuggest", arg: s, disabled: done }); }).join("") + "</div>" +
         '<p class="label">Working steps read</p>' +
         q.steps.map(function (s) {
-          return '<div class="step-row' + (s.sure ? "" : " low") + '"><span>' + s.text + " [demo]</span>" + ui.pill(s.sure ? "Sure" : "Unsure - check", { kind: s.sure ? "" : "low" }) + "</div>";
+          return '<div class="step-row' + (s.sure ? "" : " low") + '"><span>' + s.text + "</span>" + ui.pill(s.sure ? "Sure" : "Unsure - check", { kind: s.sure ? "" : "low" }) + "</div>";
         }).join("") +
         '<div class="row wrap">' +
           ui.btn("Accept", { action: "ocrAccept", primary: true, disabled: done }) +
-          ui.btn("Correct", { action: "ocrCorrect", disabled: done, title: "Save your edit of the text" }) +
+          ui.btn(st.ocrEdit === q.id ? "Save correction" : "Correct", { action: "ocrCorrect", disabled: done, title: "Edit the read text, then save" }) +
           ui.btn("Can't read - flag", { action: "ocrFlag", disabled: done, title: "Mark this answer by hand" }) +
         "</div>", "emph focus");
 
