@@ -1,0 +1,99 @@
+/* Theme "wire": deliberately rough low-fidelity look.
+   Grey boxes, dashed lines, a sketchy font, no animations.
+   A theme only sets tokens and how the components look. Layout stays in css/base.css.
+   To make a new theme: copy this file, change it, add its name to LS.THEMES in js/app.js. */
+
+:root {
+  --font: "Comic Sans MS", "Chalkboard SE", "Comic Neue", system-ui, sans-serif;
+  --bg: #f4f4f1;
+  --surface: #ffffff;
+  --ink: #222222;
+  --muted: #6b6b6b;
+  --line: #9a9a9a;
+  --line-strong: #222222;
+  --accent: #222222;
+  --accent-ink: #ffffff;
+  --warn: #fff1a8;
+  --hot: #fdd9c9;
+  --ok: #dcefd8;
+  --info: #e4ecf5;
+  --radius: 10px;
+  --border: 2px;
+  --gap: 16px;
+  --gap-s: 8px;
+  --gap-l: 32px;
+  --maxw: 1200px;
+}
+
+body { background: var(--bg); color: var(--ink); font: 16px/1.45 var(--font); }
+h1 { font-size: 30px; }
+h2 { font-size: 19px; }
+h3 { font-size: 16px; margin-top: var(--gap); }
+a { color: inherit; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.label { text-transform: uppercase; font-size: 13px; font-weight: bold; color: var(--muted); letter-spacing: .04em; }
+
+.app-header { background: var(--surface); border-bottom: var(--border) solid var(--line); }
+.app-header .brand { font-weight: bold; font-size: 22px; }
+.app-header .logo { border: var(--border) solid var(--line-strong); border-radius: 6px; background: #e6e6e6; }
+.app-header .crumbs, .app-header .role { color: var(--muted); }
+.navlink { text-decoration: underline; }
+.badge-count { background: var(--accent); color: var(--accent-ink); border-radius: 9px; font-size: 11px; }
+
+.id-tag { font-size: 12px; color: var(--muted); }
+.id-tag::before { content: "Screen "; }
+.id-tag span { font-style: italic; }
+
+.card { background: var(--surface); border: var(--border) solid var(--line); border-radius: var(--radius); }
+.card.emph { border-color: var(--line-strong); }
+.item-title { font-weight: bold; margin: 0; }
+.card.item p { margin: 0; }
+
+.btn { background: var(--surface); color: var(--ink); border: var(--border) solid var(--line-strong); border-radius: 999px; font-weight: bold; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); }
+.btn[disabled] { background: #e6e6e6; color: #999; border-color: #bbb; border-style: dashed; }
+
+.chip { border: var(--border) solid var(--line); border-radius: 999px; background: var(--surface); font-size: 14px; }
+.chip.ok { background: var(--ok); }
+.chip.warn { background: var(--warn); }
+
+.ph { background: #efefef; border: var(--border) solid #c4c4c4; border-radius: 6px; color: var(--muted); font-size: 14px;
+  background-image:
+    linear-gradient(to top right, transparent calc(50% - 1px), #c4c4c4 50%, transparent calc(50% + 1px)),
+    linear-gradient(to bottom right, transparent calc(50% - 1px), #c4c4c4 50%, transparent calc(50% + 1px)); }
+.ph span { background: var(--surface); border: 1px solid #c4c4c4; border-radius: 4px; }
+
+.banner { border: var(--border) solid var(--line-strong); border-radius: var(--radius); background: var(--info); }
+.banner.warn { background: var(--hot); }
+.banner.ok { background: var(--ok); }
+
+.note { font-size: 13px; font-style: italic; color: #4f7a3a; border-left: 3px solid #8fbf6f; padding-left: 8px; }
+
+.dropzone { border: var(--border) dashed var(--line-strong); border-radius: var(--radius); }
+.status-line { background: #ececec; border: var(--border) solid var(--line); border-radius: var(--radius); }
+.stepper { border: var(--border) solid var(--line); border-radius: 999px; background: var(--surface); }
+.stepper .current { font-weight: bold; text-decoration: underline; }
+.scan-mark { background: var(--warn); border: var(--border) solid #b9a542; border-radius: 4px; font-size: 13px; font-style: italic; }
+
+.field { background: var(--surface); color: var(--ink); border: var(--border) solid var(--line); border-radius: 6px; }
+.field.lowconf { background: var(--warn); border-color: #b9a542; }
+.field[readonly] { background: #f6f6f6; }
+
+.step-row { border: var(--border) solid var(--line); border-radius: 6px; }
+.step-row.hot { background: var(--hot); border-color: var(--line-strong); }
+.bar { background: #d9d9d9; border: var(--border) solid var(--line-strong); border-radius: 4px; }
+.bar.hot { background: var(--hot); }
+.bar.next { border-style: dashed; background: transparent; }
+.bar-col span { font-size: 13px; color: var(--muted); }
+.dot { border: var(--border) solid var(--line-strong); border-radius: 50%; }
+.dot.on { background: var(--accent); }
+.stars::before { content: "* "; }
+
+.table th { border-bottom: var(--border) solid var(--line-strong); }
+.table td { border-bottom: 1px solid #ddd; }
+.table tr.lowrow td { background: var(--warn); }
+select { font: inherit; padding: 4px 8px; border: var(--border) solid var(--line); border-radius: 6px; background: var(--surface); }
+
+.todo { border: var(--border) dashed var(--line-strong); border-radius: var(--radius); background: repeating-linear-gradient(45deg, #f7f7f2 0 10px, #efefe8 10px 20px); }
+.todo-title { font-weight: bold; }
