@@ -175,3 +175,8 @@ textarea.field { resize: vertical; }
 .focus-steps { margin: var(--gap-s) 0; }
 .focus-steps .soft-box { margin: 0; }
 .tile-icon { display: flex; align-items: center; justify-content: center; min-height: 90px; margin-bottom: var(--gap-s); }
+
+/* Children's screens: touch targets of at least 48 px (size/touch-student). */
+.shell.student .btn, .shell.student button.pill, .shell.student .seg button, .shell.student .topbar a.btn { min-height: 48px; }
+.shell.student .pill { min-height: 32px; }
+.shell.student button.pill { padding-left: 16px; padding-right: 16px; }

@@ -80,7 +80,7 @@ LS.data = {
   // Feedback and practice (T6).
   feedback: {
     well: "You got all the multiplication questions right!",
-    next: "Let's practise comparing fractions with different denominators.",
+    next: "Let's practise comparing fractions with different bottom numbers.",
     variants: {
       shorter: { well: "All multiplication questions right!", next: "Practise comparing fractions." },
       simpler: { well: "You got every times question right!", next: "Let's practise finding the bigger fraction." },

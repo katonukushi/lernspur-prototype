@@ -21,7 +21,7 @@
       var newResult = st.published && !st.seenResult;
       var sub = st.published
         ? (newResult ? t("You have new results to look at.", "Du hast neue Ergebnisse.") : t("Your teacher has checked your Fractions Quiz.", "Deine Lehrerin hat dein Brüche-Quiz angeschaut."))
-        : st.upload === "sent" ? t("Your teacher is looking at your paper.", "Deine Lehrerin schaut sich dein Blatt an.")
+        : st.upload === "sent" ? t("Frau Weber is checking your Fractions Quiz.", "Frau Weber schaut sich dein Brüche-Quiz an.")
         : st.rescan ? t("Your teacher asked for new photos.", "Deine Lehrerin möchte neue Fotos.")
         : t("Take photos of your Fractions Quiz.", "Mach Fotos von deinem Brüche-Quiz.");
 

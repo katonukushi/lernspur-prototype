@@ -51,11 +51,11 @@
       }).join("") + st.ownQuestions.map(function (q, i) {
         return '<div class="item-row"><input class="field" data-bind="ownQuestions.' + i + '" value="' + LS.esc(q) + '" placeholder="My own question ..."' + (locked ? " readonly" : "") + "></div>";
       }).join("");
-      var pack = ui.card('<div class="row between"><h2>' + d.pack.title + "</h2>" +
+      var pack = ui.card('<div class="row between"><h2>' + d.pack.title + " (" + d.pack.items.length + " of " + d.pack.size + " questions shown)</h2>" +
           ui.pill("Attach: " + (st.packAttach ? "on" : "off"), { action: "packAttach", on: st.packAttach, disabled: locked }) + "</div>" +
         '<div class="' + (st.packAttach ? "" : "dimmed") + '">' + items +
           '<div class="row wrap">' + ui.btn("+ Add my own question", { action: "addOwn", disabled: locked || !st.packAttach }) +
-          ui.hint("When Tim masters the pack, the red flag closes.") + "</div></div>");
+          ui.hint("When Tim finishes the pack, you can close the support focus.") + "</div></div>");
 
       var preview = ui.card("<h2>Preview: what " + d.student.first + " will see</h2>" +
         '<div class="card inner soft"><p><b>' + LS.starsFor(LS.total()) + " of 5 stars</b></p>" +
@@ -69,7 +69,6 @@
         ui.btn("Back to results", { go: "T3" }) + ui.hint("Publishing sends a notification to " + d.student.first + "."),
         (st.published ? ui.pill("Published - " + d.student.first + " was notified", { on: true }) :
           (st.draftSaved ? ui.hint("Draft saved") : "") +
-          ui.btn("Preview as pupil", { action: "preview" }) +
           ui.btn("Save draft", { action: "saveDraft" }) +
           ui.btn("Publish to student", { action: "publish", primary: true })));
 

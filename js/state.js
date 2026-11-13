@@ -3,7 +3,7 @@
 
 window.LS = window.LS || {};
 
-LS.STORAGE_KEY = "lernspur-demo-v2";
+LS.STORAGE_KEY = "lernspur-demo-v3";
 
 LS.initialState = function () {
   var d = LS.data, answers = {}, grade = {};
@@ -61,6 +61,7 @@ LS.initialState = function () {
     showHelp: false,
     practice: 2,            // questions done in the comparing-fractions pack
     focusClosed: false,     // only the teacher closes the support focus (T5)
+    missionSeen: false,     // the child has left the "Mission done" view (S4, Figma M2)
 
     // parent
     parentCompose: false,
@@ -105,7 +106,9 @@ LS.total = function () {
   return LS.data.exam.questions.reduce(function (s, q) { return s + g[q.id].points; }, 0);
 };
 LS.pct = function (points) { return Math.round(points / LS.data.exam.maxPoints * 100); };
-LS.starsFor = function (points) { return Math.max(1, Math.floor(LS.pct(points) / 20)); };
+// Star mapping (team decision): under 40 % = 1, 40-59 = 2, 60-79 = 3, 80-89 = 4, from 90 = 5.
+LS.starsForPct = function (pct) { return pct >= 90 ? 5 : pct >= 80 ? 4 : pct >= 60 ? 3 : pct >= 40 ? 2 : 1; };
+LS.starsFor = function (points) { return LS.starsForPct(LS.pct(points)); };
 LS.scoreText = function (points) {
   return LS.starsFor(points) + " of 5 stars - " + points + "/" + LS.data.exam.maxPoints + " (" + LS.pct(points) + " %)";
 };

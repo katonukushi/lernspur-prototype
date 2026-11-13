@@ -82,7 +82,7 @@
       var otherList = ui.card("<h2>Other answers (" + others.length + ")</h2>" + others.map(function (x) {
         var low = x.suspect && !st.checked[x.id];
         var body = "<b>" + x.label + "</b> <span>" + LS.esc(st.answers[x.id]) + "</span>" + ui.conf(x.ocrConf) +
-          (st.checked[x.id] ? ui.pill(st.checked[x.id]) : "");
+          (st.checked[x.id] ? ui.pill("Checked") : "");
         return x.suspect
           ? '<button type="button" class="answer-row' + (low ? " low" : "") + '" data-action="ocrGo" data-arg="' + x.id + '">' + body + "</button>"
           : '<div class="answer-row">' + body + "</div>";
@@ -103,7 +103,7 @@
           return '<div class="step-row' + (s.sure ? "" : " low") + '"><span>' + s.text + "</span>" + ui.pill(s.sure ? "Sure" : "Unsure - check", { kind: s.sure ? "" : "low" }) + "</div>";
         }).join("") +
         '<div class="row wrap">' +
-          ui.btn("Accept", { action: "ocrAccept", primary: true, disabled: done }) +
+          ui.btn(status === "accepted" ? "Accepted" : "Accept", { action: "ocrAccept", primary: status !== "accepted", disabled: done || status === "accepted" }) +
           ui.btn(st.ocrEdit === q.id ? "Save correction" : "Correct", { action: "ocrCorrect", disabled: done, title: "Edit the read text, then save" }) +
           ui.btn("Can't read - flag", { action: "ocrFlag", disabled: done, title: "Mark this answer by hand" }) +
         "</div>", "emph focus");
@@ -111,7 +111,7 @@
       var allChecked = n === unc.length;
       var bar = ui.actions(
         ui.btn("Previous uncertain", { action: "ocrStep", arg: "prev" }) +
-        ui.btn("Next uncertain", { action: "ocrStep", arg: "next", primary: true }) +
+        ui.btn("Next uncertain", { action: "ocrStep", arg: "next" }) +
         ui.btn("Request re-scan", { action: "rescan", disabled: done }) +
         ui.hint(done ? "Text approved. AI grading is done." : allChecked ? "All uncertain answers checked." : "Check all uncertain answers to continue."),
         done ? ui.btn("Go to grading", { go: "T3", primary: true })

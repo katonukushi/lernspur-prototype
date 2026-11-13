@@ -114,6 +114,8 @@ button.answer-row:hover { border-color: var(--line-strong); }
 .exam-card .big-stars .stars { font-size: 20px; letter-spacing: 2px; }
 .stars { letter-spacing: 2px; }
 .soft-box { background: var(--soft); border-radius: 6px; }
+.soft-box.todo { background: transparent; border: 1px dashed var(--line-strong); }   /* step not reached yet: shape, not only color */
+.big-word { font-size: 34px; font-weight: 700; }
 .bar { background: #d6d6d6; border: 1px solid #9a9a9a; }
 
 /* P1 parent view */

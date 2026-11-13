@@ -31,8 +31,8 @@
 
       var info = ui.card("<h2>" + d.exam.title + " · " + d.exam.date + " · " + d.exam.pagesExpected + " " + t("pages expected", "Seiten erwartet") + "</h2>" +
         '<div class="row wrap"><span class="muted">' + t("My exam is in:", "Meine Prüfung ist auf:") + "</span>" +
-          ui.pill((st.examLang === "EN" ? "(o)" : "( )") + " English", { action: "examLang", arg: "EN", on: st.examLang === "EN", disabled: sent }) +
-          ui.pill((st.examLang === "DE" ? "(o)" : "( )") + " Deutsch", { action: "examLang", arg: "DE", on: st.examLang === "DE", disabled: sent }) + "</div>");
+          ui.pill("English", { action: "examLang", arg: "EN", on: st.examLang === "EN", disabled: sent }) +
+          ui.pill("Deutsch", { action: "examLang", arg: "DE", on: st.examLang === "DE", disabled: sent }) + "</div>");
 
       var camera = ui.card('<div class="camera">' + '<div class="frame">' + t("Put your page inside the frame", "Leg dein Blatt in den Rahmen") + "</div></div>" +
         '<div class="row between">' + ui.btn(t("Choose a file", "Datei wählen"), { action: "photo", disabled: sent || pages.length >= 4 }) +

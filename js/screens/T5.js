@@ -23,7 +23,7 @@
       [closed ? "Oct 14" : "next", closed ? "You closed the support focus" : "You close the support focus", closed]
     ];
     var timeline = '<div class="grid-4 focus-steps">' + steps.map(function (s) {
-      return '<div class="soft-box' + (s[2] ? "" : " dimmed") + '"><span class="muted tiny">' + s[0] + "</span><br><b>" + s[1] + "</b></div>";
+      return '<div class="soft-box' + (s[2] ? "" : " todo") + '"><span class="muted tiny">' + s[0] + "</span><br><b>" + s[1] + "</b></div>";
     }).join("") + "</div>";
     var note = closed
       ? "Tim and his parents now see \"Finished\". The concept stays on the trail, so the next fractions exam shows whether it holds."
@@ -46,8 +46,8 @@
       }).join("");
       var actions = closed
         ? ui.btn("Reopen focus", { action: "reopenFocus" }) + ui.btn("Back to dashboard", { go: "T1", primary: true })
-        : showFocus && packDone
-          ? ui.btn("Close support focus", { action: "closeFocus", primary: true })
+        : showFocus && st.published && st.packAttach
+          ? ui.btn("Back to dashboard", { go: "T1" }) + ui.btn("Close support focus", { action: "closeFocus", primary: true, disabled: !packDone })
           : ui.btn("Send practice pack", { go: "T6", primary: true, disabled: !st.committed });
       return '<div class="page-head"><h1>' + d.student.name + " - Learning Trail</h1>" + ui.btn("Back to evidence", { go: "T4" }) + "</div>" +
         ui.card("<h2>Trail across exams</h2>" + header + rows +

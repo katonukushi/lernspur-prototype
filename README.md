@@ -41,8 +41,8 @@ Click the numbered steps from left to right, or follow the flow inside the app:
 4. **Teacher, T3:** accept Q1 and Q2, override Q3 with +1 point and the reason "Partial credit" (AI 17/25, teacher 18/25), confirm the feedback draft, then "Confirm grade".
 5. **Teacher, T4:** review the evidence across exams and confirm, wait on or dismiss the red flag.
 6. **Teacher, T5:** see the Learning Trail, then "Send practice pack".
-7. **Teacher, T6:** edit the feedback, adjust the practice pack, optionally "Preview as pupil", then "Publish to student".
-8. **Student, S1 / S3 / S4:** while the teacher checks, "My results" says "Waiting for my teacher"; after publishing the bell shows the new messages; open the result, then finish the practice pack.
+7. **Teacher, T6:** edit the feedback, adjust the practice pack, check the pupil preview (its "Start practice" button opens the student view as a preview), then "Publish to student".
+8. **Student, S1 / S3 / S4:** while the teacher checks, "My results" says "Waiting for my teacher"; after publishing the bell shows the new messages; open the result, then finish the practice pack ("Mission done!", then "Back to My Trail").
 9. **Teacher, T5:** after Tim finishes the pack, "Close support focus" (only the teacher can close it; "Reopen focus" undoes it).
 10. **Parent, P1 (phone layout):** before the teacher publishes, sees only "Being checked"; afterwards the checked grade, the Learning Trail, the confirmed support focus with a help-at-home example, the practice mission, and a message sheet with quick replies.
 

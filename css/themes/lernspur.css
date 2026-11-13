@@ -25,11 +25,13 @@
 .logo { background: var(--accent); border-radius: 8px; }
 .avatar { background: var(--selected); color: var(--ink); }
 .sidenav a.on { background: var(--selected); box-shadow: inset 3px 0 0 var(--accent); }
-.btn { border-color: #8a928c; }
+.btn, .pill { border-color: #828a84; }   /* color/border/strong: 3:1 against page, surface and selected */
 .btn.active, .seg button.on { background: var(--selected); color: var(--ink); }
 .btn.primary:hover { background: #22394f; border-color: #22394f; }
 .pill.on { background: var(--selected); border-color: var(--accent); }
-.seg { border-color: #8a928c; }
+.seg { border-color: #828a84; }
+.pill.dark, .pill.on { border-color: var(--accent); }
+.pill.low { border-color: var(--low); }
 .card.emph, .card.focus-card { border-color: var(--accent); }
 .card.focus-card { border-left-color: var(--accent); }
 .stepper li.current { border-color: var(--accent); background: var(--selected); }

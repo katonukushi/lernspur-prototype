@@ -9,10 +9,20 @@
   LS.action("dismissReason", function (r) { LS.state.dismissReason = r; LS.state.flag = "dismissed"; });
   LS.action("flagReopen", function () { LS.state.flag = "open"; LS.state.dismissReason = null; });
 
+  // Result of each decision, same content as the Figma frame "M1 - T4 - Red flag states".
   var RESULT = {
-    confirmed: "Flag confirmed. Saved to Tim's profile; it is shown to the parent once you release feedback.",
-    wait: "Waiting. LernSpur checks again after the next exam. Nothing is saved yet.",
-    dismissed: "Flag dismissed. Nothing is added to the record."
+    confirmed: { pill: "Confirmed", title: "Requires additional support in fractions",
+      text: "Saved to Tim's profile on Oct 10. Suggested practice is ready.",
+      notes: ["Tim sees: \"Extra help from your teacher\".", "Parent sees: the confirmed concern."],
+      next: ["Send practice pack", "T6"] },
+    wait: { pill: "Waiting", title: "Check again after the next exam",
+      text: "Nothing is added to Tim's record yet.",
+      notes: ["Nothing is shown to Tim or the parent.", "Reminder after the next fractions exam"],
+      next: ["Back to dashboard", "T1"] },
+    dismissed: { pill: "Dismissed", title: "No red flag",
+      text: "Nothing is added to Tim's record.",
+      notes: ["Nothing is shown to Tim or the parent."],
+      next: ["Back to dashboard", "T1"] }
   };
 
   // A row of mistake pills linked by lines, one per exam (also used on T5).
@@ -54,16 +64,20 @@
         decision = '<div class="stack tight">' +
           ui.btn("Confirm flag", { action: "flagDecide", arg: "confirmed", primary: true, cls: "block" }) +
           ui.btn("Wait and check again after the next exam", { action: "flagDecide", arg: "wait", cls: "block" }) +
-          '<div class="card inner">' + ui.btn("Dismiss", { action: "flagDecide", arg: "dismissed" }) +
+          '<div class="card inner">' + ui.btn("Dismiss", { action: "flagDecide", arg: "dismissed", title: "Dismiss without a reason, or pick a reason" }) +
             '<div class="row wrap"><span class="muted small">Reason:</span>' + d.dismissReasons.map(function (r) {
               return ui.pill(r, { action: "dismissReason", arg: r });
             }).join("") + "</div></div>" +
           '<p class="muted tiny">Nothing is added to the student\'s record or shown to the parent until you confirm.</p></div>';
       } else {
-        decision = '<div class="banner ' + (st.flag === "confirmed" ? "ok" : "info") + '">' + RESULT[st.flag] +
-          (st.dismissReason ? " Reason: " + st.dismissReason + "." : "") + "</div>" +
+        var r = RESULT[st.flag];
+        decision = '<div class="stack tight"><div>' + ui.pill(r.pill, { kind: st.flag === "confirmed" ? "dark" : st.flag === "dismissed" ? "dashed" : "", on: st.flag === "wait" }) + "</div>" +
+          "<h3>" + r.title + "</h3>" +
+          (st.flag === "dismissed" ? "<p><b>Reason: " + (st.dismissReason || "not given") + "</b></p>" : "") +
+          "<p>" + r.text + "</p>" +
+          r.notes.map(function (n) { return '<p class="muted small">' + n + "</p>"; }).join("") +
           '<div class="row wrap">' + ui.btn("Change decision", { action: "flagReopen" }) +
-          ui.btn("Next: feedback and practice", { go: "T6", primary: true }) + "</div>";
+          ui.btn(r.next[0], { go: r.next[1], primary: st.flag === "confirmed" }) + "</div></div>";
       }
 
       var side = '<div class="stack">' +
