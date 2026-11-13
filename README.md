@@ -43,7 +43,7 @@ Click the numbered steps from left to right, or follow the flow inside the app:
 6. **Teacher, T5:** see the Learning Trail, then "Send practice pack".
 7. **Teacher, T6:** edit the feedback, adjust the practice pack, optionally "Preview as pupil", then "Publish to student".
 8. **Student, S1 / S3 / S4:** the bell shows the new messages; open the result, then finish the practice pack.
-9. **Parent, P1:** sees the checked grade and, once the practice pack is done, that the concern is resolved.
+9. **Parent, P1 (phone layout):** before the teacher publishes, sees only "Being checked"; afterwards the checked grade, the Learning Trail, the confirmed support focus with a help-at-home example, the practice mission, and a message sheet with quick replies.
 
 "Reset demo" starts over.
 "Notes" shows or hides the screen IDs and annotations.
@@ -63,7 +63,7 @@ Click the numbered steps from left to right, or follow the flow inside the app:
 | T4 | Evidence Trail: learning gap + red flag across exams | Figma T4 |
 | T5 | Learning Trail of one student | Figma T5 |
 | T6 | Feedback and practice pack | Figma T6 |
-| P1 | Parent summary (bonus) | Figma P1 |
+| P1 | Parent summary (bonus, phone) | Figma P1, P1b, P1c (based on Leena's P1 wireframes) |
 
 The screens follow the team's Figma skeletons ("LernSpur - M3 Prototype"), which build on our Milestone 2 wireframes.
 

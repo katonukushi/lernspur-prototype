@@ -56,9 +56,9 @@ LS.data = {
 
   // Evidence Trail (T4) and Learning Trail (T5).
   exams: [
-    { id: "quiz", label: "Quiz", date: "Sep 26", lang: "EN", stars: 4, score: "16/20 (80 %)" },
-    { id: "t1", label: "Test 1", date: "Oct 2", lang: "DE", stars: 2, score: "10/20 (50 %)" },
-    { id: "t2", label: "Test 2", date: "Oct 6", lang: "EN", stars: 2, score: "11/20 (55 %)" },
+    { id: "quiz", label: "Quiz", date: "Sep 26", lang: "EN", stars: 4, score: "16/20 (80 %)", points: "16/20", pct: 80 },
+    { id: "t1", label: "Test 1", date: "Oct 2", lang: "DE", stars: 2, score: "10/20 (50 %)", points: "10/20", pct: 50 },
+    { id: "t2", label: "Test 2", date: "Oct 6", lang: "EN", stars: 2, score: "11/20 (55 %)", points: "11/20", pct: 55 },
     { id: "fq", label: "Fractions Quiz", date: "Oct 9", lang: "DE", current: true }
   ],
   trail: [
@@ -111,7 +111,14 @@ LS.data = {
   skillsGrowing: [{ name: "Adding fractions [demo]", done: 4, of: 5 }],
   otherPacks: [{ name: "Times tables [demo]", done: true }],
 
-  // Parent side (P1).
-  parentResults: [{ label: "Word problems quiz · Nov 12 [demo]", pending: true }],
-  improved: ["Multiplication", "Word problems"]
+  // Parent side (P1, phone). Layout and wording from Leena's P1 wireframes (13.11.).
+  parent: {
+    initials: "SB",
+    summary: "Tim did well in multiplication. He is practising how to compare fractions. Frau Weber has given him a short practice pack.",
+    focusTitle: "Comparing fractions with different bottom numbers",
+    confirmed: "Oct 10",
+    wentWell: "Tim got all the multiplication questions right.",
+    helpAtHome: "Draw two bars of the same length and split both into equal parts. Then compare the coloured parts.",
+    quickReplies: ["How can I help with fractions at home?", "Can we arrange a short meeting?", "Thank you for the feedback"]
+  }
 };

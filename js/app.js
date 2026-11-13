@@ -96,9 +96,9 @@ LS.studentShell = function (def, body) {
 LS.parentShell = function (def, body) {
   return '<div class="shell parent">' +
     '<header class="topbar">' +
-      '<div class="row"><a href="#" class="brand" data-go="P1"><span class="logo"></span>' + LS.data.product + '</a><span class="muted">Parent</span>' +
-        '<span class="btn active">Summary</span><span class="btn off" title="Not part of this prototype">Messages</span></div>' +
-      '<div class="row"><span class="btn">Child: ' + LS.data.student.name + " v</span>" + LS.langToggle() + "</div>" +
+      '<a href="#" class="brand" data-go="P1"><span class="logo"></span>' + LS.data.product + "</a>" +
+      LS.ui.pill(LS.t("Parent", "Eltern")) + '<span class="spacer"></span>' + LS.langToggle() +
+      '<span class="avatar" title="Signed in as parent">' + LS.data.parent.initials + "</span>" +
     "</header>" +
     '<main class="content">' + body + "</main></div>";
 };

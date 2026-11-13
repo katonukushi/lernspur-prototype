@@ -115,3 +115,37 @@ button.answer-row:hover { border-color: var(--line-strong); }
 .stars { letter-spacing: 2px; }
 .soft-box { background: var(--soft); border-radius: 6px; }
 .bar { background: #d6d6d6; border: 1px solid #9a9a9a; }
+
+/* P1 parent view */
+.tag { border: 1px solid #9a9a9a; border-radius: 4px; font-size: 11px; font-weight: 700; color: var(--muted); }
+.pill.dashed { border-style: dashed; color: var(--muted); font-size: 12px; }
+.score-big { font-size: 34px; font-weight: 700; line-height: 1; }
+.result-row { border-top: 1px solid var(--line); }
+.result-row .pts { font-size: 16px; }
+.gate { background: var(--soft); border: 1.5px dashed #9a9a9a; border-radius: 8px; }
+.gate-icon { font-size: 26px; line-height: 1; color: var(--muted); }
+.check { font-weight: 700; }
+.trail-chart .grid { stroke: var(--line); stroke-width: 1; }
+.trail-chart .axis { font-size: 11px; font-weight: 700; fill: var(--muted); }
+.trail-chart .line { stroke: var(--accent); stroke-width: 2; }
+.trail-chart .line.pending { stroke: #9a9a9a; stroke-dasharray: 4 4; }
+.trail-chart .pt { fill: var(--surface); stroke: var(--accent); stroke-width: 2; }
+.trail-chart .pt.current { fill: var(--accent); }
+.trail-chart .pt.pending { stroke: #9a9a9a; stroke-dasharray: 2 2; }
+.trail-chart .pt-label { font-size: 13px; font-weight: 700; fill: var(--ink); }
+.trail-chart .pt-label.muted { font-size: 11px; fill: var(--muted); }
+.cell { border: 1px solid var(--line); border-radius: 4px; font-size: 11px; font-weight: 700; color: var(--muted); }
+.cell.hit { background: var(--soft); border-color: #9a9a9a; color: var(--ink); }
+.cell.dashed { border-style: dashed; }
+.card.focus { border-left: 4px solid var(--line-strong); }
+.card.dashed { border: 1.5px dashed #9a9a9a; background: transparent; }
+.eighths i { background: #dedede; border-radius: 4px; }
+.eighths i.on { background: var(--accent); }
+.mission .dot { border: 2px solid var(--line); border-radius: 50%; background: var(--surface); color: var(--accent-ink); font-size: 13px; font-weight: 700; }
+.mission li.done .dot { background: var(--accent); border-color: var(--accent); }
+.mission li.current .dot { border-color: var(--accent); box-shadow: inset 0 0 0 4px var(--surface), inset 0 0 0 8px var(--accent); }
+.mission li.next b { color: var(--muted); }
+.scrim { background: rgba(22, 22, 22, .45); }
+.sheet { background: var(--surface); border-radius: 16px 16px 0 0; box-shadow: 0 -4px 24px rgba(0, 0, 0, .15); }
+.sheet .grabber { background: #bdbdbd; border-radius: 2px; }
+.icon-btn { background: none; border: 0; font-size: 18px; color: var(--ink); }
