@@ -140,6 +140,77 @@
     else if (k === "c" || k === "C") { ripple = !ripple; }
   }, true);
 
+
+  // ---------- autoplay with subtitles (Play button) ----------
+  // A Play button starts a scripted run from S2 to P1. Each segment shows its subtitles, then moves on with next().
+  // ?speed=10 plays ten times faster (for testing).
+
+  var speed = Number(new URLSearchParams(location.search).get("speed")) || 1;
+  var SCRIPT = [
+    ["S2", ["LernSpur by Team Solos: AI-assisted exam feedback for grades 1 to 5, in English and German.",
+            "Existing tools trust OCR blindly, judge one exam at a time, and only talk to teachers.",
+            "Our answer is the Learning Trail, with the teacher in control at every step.",
+            "Tim photographs his exam on a tablet. A photo check catches blurry pages before he sends it."]],
+    ["T1", ["Frau Weber's queue sorts the exams by how uncertain the OCR is."]],
+    ["T2", ["Learning Trail step 1, Confidence OCR: only the characters the OCR is unsure about are highlighted.",
+            "Here it read \"S\" instead of 5, with 41 % confidence. One tap on a suggestion fixes it.",
+            "Only 2 of 5 answers need attention, so the check takes seconds instead of minutes.",
+            "AI grading stays locked until the teacher approves the text."]],
+    ["T3", ["The AI suggests 17 of 25 points and shows how sure it is and why.",
+            "Frau Weber gives partial credit on Q3 with a one-tap reason: 18 of 25.",
+            "Nothing reaches Tim before the teacher confirms."]],
+    ["T4", ["Step 2: a red flag is only raised when the same mistake appears in two or more exams.",
+            "Step 3: the teacher decides. Confirm, keep watching, or dismiss with a reason."]],
+    ["T5", ["The Learning Trail shows the support focus across all exams. Only the teacher can close it."]],
+    ["T6", ["Step 4: feedback in child-friendly words plus a short practice pack.",
+            "Publishing is the one moment Tim and his parent get access."]],
+    ["S1", ["Tim's bell shows new feedback from his teacher."]],
+    ["S3", ["He sees stars instead of raw points, what he did well first, and the support focus in child words."]],
+    ["S4", ["He follows his progress across several exams and practises with a short mission."]],
+    ["P1", ["Bonus: the parent sees a short, teacher-checked summary on the phone and can message the teacher.",
+            "Three gaps, one Learning Trail, and the teacher in control at every step."]]
+  ];
+
+  var sub = null, playing = false;
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms / speed); }); }
+  function say(text) {
+    if (!sub) { sub = document.createElement("div"); sub.className = "rec-sub"; document.body.appendChild(sub); }
+    sub.textContent = text;
+    sub.style.display = text ? "block" : "none";
+  }
+  function dur(text) { return Math.max(3500, text.length * 62); }
+
+  async function play() {
+    if (playing) return;
+    playing = true;
+    reset();
+    await wait(400);
+    for (var i = 0; i < SCRIPT.length; i++) {
+      var lines = SCRIPT[i][1];
+      for (var j = 0; j < lines.length; j++) {
+        say(lines[j]);
+        await wait(dur(lines[j]));
+        if (j === 0) hideCard();
+      }
+      hideCard();
+      if (i < SCRIPT.length - 1) { say(""); next(); await wait(900); }
+    }
+    await wait(2500);
+    say("");
+    playing = false;
+  }
+
+  function showPlay() {
+    var b = document.createElement("button");
+    b.className = "rec-play";
+    b.type = "button";
+    b.setAttribute("aria-label", "Play walkthrough");
+    b.textContent = "▶ Play";
+    b.addEventListener("click", function (e) { e.stopPropagation(); b.remove(); play(); });
+    document.body.appendChild(b);
+  }
+  window.addEventListener("DOMContentLoaded", showPlay);
+
   // ---------- start: clean state at S2 ----------
 
   document.documentElement.classList.add("record");
@@ -147,5 +218,5 @@
   history.replaceState(null, "", location.pathname + location.search + "#/S2");
   window.addEventListener("DOMContentLoaded", function () { document.body.classList.add("record"); });
 
-  LS.record = { next: next, reset: reset, hideCard: hideCard, cardShown: function () { return !!card; } };
+  LS.record = { play: play, next: next, reset: reset, hideCard: hideCard, cardShown: function () { return !!card; } };
 })();
