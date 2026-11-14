@@ -66,6 +66,28 @@ Click the numbered steps from left to right, or follow the flow inside the app:
 "Device frames" or the F key shows or hides the tablet and phone frames.
 "Hide" or the D key hides the demo bar, for example to record the walkthrough video.
 
+## Recording mode (walkthrough video)
+
+Open `index.html?mode=record` (live: https://katonukushi.github.io/lernspur-prototype/?mode=record).
+It starts from a clean demo at S2, hides the demo bar and the notes, keeps the device frames, and shows a full-screen title card whenever the role changes (Student, Teacher, Parent).
+Saved preferences of the normal demo are not changed.
+
+| Key | Action |
+|---|---|
+| Click, Space or Enter | Close the title card |
+| N or Right arrow | Next step of the walkthrough; also the hand-over to the next role (S2 to T1, T6 to S1, S4 to P1) |
+| R | Reset to the start (S2, clean state) |
+| C | Click ripple on or off (`?mode=record&ripple=off` starts with it off) |
+
+D (demo bar) and F (device frames) keep working as in the normal demo.
+
+E2E test and dry run of the recording mode at 1920 × 1080 (needs Node and a Chromium-based browser):
+
+```sh
+npm i --prefix /tmp/lernspur-e2e puppeteer-core@23
+PUPPETEER_DIR=/tmp/lernspur-e2e/node_modules/puppeteer-core node tests/record-mode.mjs
+```
+
 ## Screens
 
 | ID | Screen | Source |
