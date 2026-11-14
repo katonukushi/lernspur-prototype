@@ -11,11 +11,6 @@
     p.push({ status: p.length === 1 ? "blurry" : "clear" });
     selected = p.length - 1;
   });
-  LS.action("retake", function () {
-    var p = LS.state.pages;
-    var i = p[selected] && p[selected].status === "blurry" ? selected : p.findIndex(function (x) { return x.status === "blurry"; });
-    if (i >= 0) { p[i].status = "clear"; selected = i; }
-  });
   LS.action("retakePage", function (i) { LS.state.pages[+i].status = "clear"; selected = +i; });
   LS.action("deletePage", function (i) { LS.state.pages.splice(+i, 1); selected = Math.max(0, LS.state.pages.length - 1); });
   LS.action("selectPage", function (i) { selected = +i; });
@@ -36,8 +31,7 @@
 
       var camera = ui.card('<div class="camera">' + '<div class="frame">' + t("Put your page inside the frame", "Leg dein Blatt in den Rahmen") + "</div></div>" +
         '<div class="row between">' + ui.btn(t("Choose a file", "Datei wählen"), { action: "photo", disabled: sent || pages.length >= 4 }) +
-          ui.btn(t("Take photo", "Foto machen"), { action: "photo", primary: true, disabled: sent || pages.length >= 4 }) +
-          ui.btn(t("Retake", "Nochmal"), { action: "retake", disabled: sent || !pages.some(function (p) { return p.status === "blurry"; }) }) + "</div>");
+          ui.btn(t("Take photo", "Foto machen"), { action: "photo", primary: true, disabled: sent || pages.length >= 4 }) + "</div>");
 
       var last = pages[selected];
       var check = !last

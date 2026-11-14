@@ -25,7 +25,8 @@
     var locked = st.committed;
     var head = '<div class="row between wrap"><span><b>' + q.label + "</b> " + LS.esc(st.answers[q.id]) + "</span>";
     if (g.status === "overridden") {
-      head += '<div class="row"><span class="muted small">AI ' + q.ai + "/" + q.max + "</span><b>Teacher: " + g.points + "/" + q.max + "</b>" +
+      head += '<div class="row">' + ui.pill(locked ? "Override confirmed" : "Override saved", { on: true }) +
+        '<span class="muted small">AI ' + q.ai + "/" + q.max + "</span><b>Teacher: " + g.points + "/" + q.max + "</b>" +
         ui.btn("-", { action: "gPts", arg: q.id + ":-", small: true, disabled: locked }) + ui.btn("+", { action: "gPts", arg: q.id + ":+", small: true, disabled: locked }) +
         ui.btn("Undo", { action: "gUndo", arg: q.id, disabled: locked }) + "</div>";
     } else {

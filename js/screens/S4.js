@@ -37,6 +37,13 @@
   LS.screen({
     id: "S4", role: "student", title: "My Trail", source: "Figma S4, M2, S4b", back: ["Home", "S1"],
     headTitle: function () { return t("My Trail", "Meine Spur"); },
+    // Coming from the "Practice" tile on S1: jump to the practice packs.
+    afterRender: function (isNew) {
+      if (!isNew || LS.s4Focus !== "packs") return;
+      LS.s4Focus = null;
+      var h = document.getElementById("s4-packs");
+      if (h) { var card = h.closest(".card"); card.scrollIntoView({ block: "center" }); card.classList.add("arrived"); h.focus({ preventScroll: true }); }
+    },
     render: function (st) {
       var hasPack = st.published && st.packAttach;
       var done = LS.packDone();
@@ -68,7 +75,7 @@
           ui.card("<h2>" + t("Skills I'm growing", "Daran wachse ich") + "</h2>" + growing.map(function (g) {
             return "<p><b>" + g.name + '</b><br><span class="row">' + ui.progress(g.done, g.of) + '<span class="small">' + g.done + "/" + g.of + " " + t("practice", "geübt") + "</span></span></p>";
           }).join("")) +
-          ui.card("<h2>" + t("My practice packs", "Meine Übungspakete") + "</h2>" + packs, "emph") +
+          ui.card('<h2 id="s4-packs" tabindex="-1">' + t("My practice packs", "Meine Übungspakete") + "</h2>" + packs, "emph") +
         "</div>" +
         ui.note("Practising is simulated: each click counts one solved question. After 5 of 5 the teacher can close the support focus (T5).");
     }

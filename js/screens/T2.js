@@ -4,6 +4,8 @@
 (function () {
   var ui = LS.ui, d = LS.data;
   var zoom = 1;
+  // Value picked for the uncertain character of each answer (chip or typed). Never pre-filled by the system.
+  var pick = {};
 
   function nextUnchecked(from) {
     var list = LS.uncertainQs(), st = LS.state;
@@ -21,31 +23,54 @@
     st.currentQ = nextUnchecked(st.currentQ);
   }
 
-  LS.action("ocrAccept", function () { mark("accepted"); });
-  // "Correct" opens the edit field; the second click saves the correction.
-  LS.action("ocrCorrect", function () {
-    var st = LS.state;
-    if (st.ocrEdit !== st.currentQ) { st.ocrEdit = st.currentQ; return; }
-    st.ocrEdit = null; mark("corrected");
+  function fixed(q, ch) { return q.ocr.replace(q.suspect, ch); }
+
+  LS.action("ocrAccept", function () {
+    var st = LS.state, q = LS.q(st.currentQ);
+    if (st.ocrEdit === q.id) {
+      // Accept in the correction state: only with a value the teacher picked or typed.
+      var v = (pick[q.id] || "").trim();
+      if (!v) return false;
+      st.answers[q.id] = fixed(q, v); st.ocrEdit = null; mark("corrected");
+      return;
+    }
+    mark(pick[q.id] ? "corrected" : "accepted");
   });
-  LS.action("ocrFlag", function () { mark("flagged"); });
+  // "Correct" opens the correction state: the uncertain character is cleared and no chip is selected.
+  LS.action("ocrCorrect", function () {
+    var st = LS.state, q = LS.q(st.currentQ);
+    st.ocrEdit = q.id; pick[q.id] = ""; st.answers[q.id] = q.ocr;
+  });
+  LS.action("ocrCancelEdit", function () {
+    var st = LS.state, q = LS.q(st.currentQ);
+    st.ocrEdit = null; pick[q.id] = ""; st.answers[q.id] = q.ocr;
+  });
+  LS.action("ocrFlag", function () { LS.state.ocrEdit = null; mark("flagged"); });
   LS.action("ocrSuggest", function (ch) {
     var st = LS.state, q = LS.q(st.currentQ);
-    st.answers[q.id] = st.answers[q.id].replace(q.suspect, ch);
+    pick[q.id] = ch;
+    if (st.ocrEdit !== q.id) st.answers[q.id] = fixed(q, ch);
   });
-  LS.action("ocrGo", function (id) { LS.state.currentQ = id; });
+  LS.action("ocrGo", function (id) { LS.state.currentQ = id; LS.state.ocrEdit = null; });
   LS.action("ocrStep", function (dir) {
     var list = LS.uncertainQs(), st = LS.state;
     var i = list.findIndex(function (q) { return q.id === st.currentQ; });
     st.currentQ = list[(i + (dir === "next" ? 1 : list.length - 1)) % list.length].id;
+    st.ocrEdit = null;
   });
   LS.action("zoom", function (dir) { zoom = Math.max(0.6, Math.min(1.8, zoom + (dir === "+" ? 0.2 : -0.2))); });
   LS.action("rescan", function () {
     var st = LS.state;
-    st.rescan = true; st.upload = "empty"; st.pages = []; st.checked = {};
+    st.rescan = true; st.upload = "empty"; st.pages = []; st.checked = {}; st.ocrEdit = null; pick = {};
     return "T1";
   });
   LS.action("approveText", function () { LS.state.ocrConfirmed = true; return "T3"; });
+
+  // Correction state: the uncertain character is an empty slot until the teacher picks or types a value.
+  function slotText(q) {
+    var i = q.ocr.indexOf(q.suspect), v = pick[q.id] || "";
+    return LS.esc(q.ocr.slice(0, i)) + '<mark class="slot' + (v ? " filled" : "") + '">' + (v ? LS.esc(v) : "&nbsp;") + "</mark>" + LS.esc(q.ocr.slice(i + q.suspect.length));
+  }
 
   // The OCR text with the uncertain character marked.
   function readText(q, text) {
@@ -56,6 +81,18 @@
 
   LS.screen({
     id: "T2", role: "teacher", nav: "Exams", title: "Verify OCR text", source: "Figma T2",
+    afterRender: function () {
+      var input = document.getElementById("ocr-fix");
+      if (!input) return;
+      input.addEventListener("input", function () {
+        var q = LS.q(LS.state.currentQ);
+        pick[q.id] = input.value;
+        var slot = document.querySelector(".read-view .slot");
+        if (slot) { slot.textContent = input.value || "\u00a0"; slot.classList.toggle("filled", !!input.value.trim()); }
+        document.querySelector(".js-accept-fix").disabled = !input.value.trim();
+        document.querySelectorAll('.focus .pill[data-action="ocrSuggest"]').forEach(function (p) { p.classList.toggle("on", p.dataset.arg === input.value.trim()); });
+      });
+    },
     render: function (st) {
       var unc = LS.uncertainQs();
       var q = LS.q(st.currentQ);
@@ -89,22 +126,30 @@
       }).join(""));
 
       var status = st.checked[q.id];
+      var editing = st.ocrEdit === q.id && !done;
       var focus = ui.card(
         '<div class="row between"><h2>' + q.label + " - " + (status ? "Checked (" + status + ")" : "Uncertain") +
           ' <span class="muted small">' + (unc.indexOf(q) + 1) + " of " + unc.length + " uncertain</span></h2>" + ui.conf(q.ocrConf) + "</div>" +
         '<p class="label">Handwriting (cropped)</p>' + ui.ph("cropped handwriting of " + q.label, 70) +
         '<p class="label">What the system read (edit if wrong)</p>' +
-        '<div class="read-view">' + readText(q, st.answers[q.id]) + "</div>" +
-        (st.ocrEdit === q.id && !done ? '<input class="field" data-bind="answers.' + q.id + '" value="' + LS.esc(st.answers[q.id]) + '" aria-label="Edit the read text">' : "") +
+        (editing
+          ? '<div class="read-view editing">' + slotText(q) + "</div>" +
+            '<div class="row wrap"><label class="label" for="ocr-fix">Right character:</label>' +
+              '<input id="ocr-fix" class="field fix" maxlength="3" autocomplete="off" placeholder="Type" value="' + LS.esc(pick[q.id] || "") + '"></div>'
+          : '<div class="read-view">' + readText(q, st.answers[q.id]) + "</div>") +
         '<div class="row wrap"><span class="label">Did you mean:</span>' +
-          q.suggestions.map(function (s) { return ui.pill(s, { action: "ocrSuggest", arg: s, disabled: done }); }).join("") + "</div>" +
+          q.suggestions.map(function (s) { return ui.pill(s, { action: "ocrSuggest", arg: s, on: !status && pick[q.id] === s, disabled: done }); }).join("") + "</div>" +
+        (editing ? '<p class="muted small">Pick a suggestion or type the right character, then accept.</p>' : "") +
         '<p class="label">Working steps read</p>' +
         q.steps.map(function (s) {
           return '<div class="step-row' + (s.sure ? "" : " low") + '"><span>' + s.text + "</span>" + ui.pill(s.sure ? "Sure" : "Unsure - check", { kind: s.sure ? "" : "low" }) + "</div>";
         }).join("") +
         '<div class="row wrap">' +
-          ui.btn(status === "accepted" ? "Accepted" : "Accept", { action: "ocrAccept", primary: status !== "accepted", disabled: done || status === "accepted" }) +
-          ui.btn(st.ocrEdit === q.id ? "Save correction" : "Correct", { action: "ocrCorrect", disabled: done, title: "Edit the read text, then save" }) +
+          (editing
+            ? ui.btn("Accept correction", { action: "ocrAccept", primary: true, disabled: !(pick[q.id] || "").trim(), cls: "js-accept-fix" }) +
+              ui.btn("Cancel", { action: "ocrCancelEdit" })
+            : ui.btn(status ? "Checked" : "Accept", { action: "ocrAccept", primary: !status, disabled: done || !!status }) +
+              ui.btn("Correct", { action: "ocrCorrect", disabled: done, title: "Clear the uncertain character and pick or type the right one" })) +
           ui.btn("Can't read - flag", { action: "ocrFlag", disabled: done, title: "Mark this answer by hand" }) +
         "</div>", "emph focus");
 

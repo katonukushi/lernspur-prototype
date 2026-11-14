@@ -39,6 +39,8 @@
 .conf.medium .conf-bar > span { background: #a87a00; }
 .conf-bar, .progress, .eighths i { background: #e3e6e1; }
 .eighths i.on, .progress > span { background: var(--accent); }
+.eighths i { box-shadow: inset 0 0 0 1.5px #828a84; }   /* empty eighths: color/border/strong, 3.5:1 against surface */
+.eighths i.on { box-shadow: none; }
 .tile-icon { background: var(--selected); color: var(--accent); }
 .thumb.on { border-color: var(--accent); }
 .dots i.on { background: var(--accent); border-color: var(--accent); }

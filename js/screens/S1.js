@@ -14,6 +14,9 @@
     progress: svg('<circle cx="10" cy="37" r="4"/><circle cx="24" cy="22" r="4"/><circle cx="38" cy="10" r="4"/><path d="M13 34l8-9"/><path d="M27 19l8-6"/>')
   };
 
+  // "Practice" opens the practice packs part of My Trail, "My progress" opens the trail from the top.
+  LS.action("openPractice", function () { LS.s4Focus = "packs"; return "S4"; });
+
   LS.screen({
     id: "S1", role: "student", title: "Student home", source: "Figma S1",
     headTitle: function () { return t("Home", "Start"); },
@@ -26,7 +29,8 @@
         : t("Take photos of your Fractions Quiz.", "Mach Fotos von deinem Brüche-Quiz.");
 
       var tile = function (icon, title, text, go, extra, badge) {
-        return '<a href="#" class="card tile' + (extra || "") + '" data-go="' + go + '"><span class="tile-icon" aria-hidden="true">' + ICONS[icon] + "</span>" +
+        var target = go === "practice" ? 'data-action="openPractice"' : 'data-go="' + go + '"';
+        return '<a href="#" class="card tile' + (extra || "") + '" ' + target + '><span class="tile-icon" aria-hidden="true">' + ICONS[icon] + "</span>" +
           "<h2>" + title + "</h2>" + (badge || '<p class="muted small">' + text + "</p>") + "</a>";
       };
       var tiles = '<div class="grid-4">' +
@@ -34,7 +38,7 @@
         tile("results", t("My results", "Meine Ergebnisse"), st.published ? t("Fractions Quiz", "Brüche-Quiz") : t("Not ready yet", "Noch nicht fertig"), "S3", newResult ? " emph" : "",
           newResult ? ui.pill(t("1 new", "1 neu"), { kind: "dark" })
             : !st.published && st.upload === "sent" ? ui.pill(t("Waiting for my teacher", "Wartet auf meine Lehrerin"), { on: true }) : null) +
-        tile("practice", t("Practice", "Üben"), st.published && st.packAttach ? t("1 pack from ", "1 Paket von ") + d.teacher.name : t("Nothing yet", "Noch nichts"), "S4") +
+        tile("practice", t("Practice", "Üben"), st.published && st.packAttach ? t("1 pack from ", "1 Paket von ") + d.teacher.name : t("Nothing yet", "Noch nichts"), "practice") +
         tile("progress", t("My progress", "Mein Fortschritt"), t("See how you grow", "So wächst du"), "S4") +
         "</div>";
 
@@ -43,7 +47,7 @@
             '<div class="row">' + ui.btn(t("Read aloud", "Vorlesen"), { action: "say", arg: st.well + " " + st.next }) + ui.btn(t("Open", "Öffnen"), { go: "S3", primary: true }) + "</div></div>" +
           (st.packAttach
             ? '<div class="msg"><div><b>' + t("Practice for you: comparing fractions", "Übung für dich: Brüche vergleichen") + '</b><p class="muted small">' + t("About 10 minutes", "Etwa 10 Minuten") + "</p></div>" +
-                '<div class="row">' + ui.btn(t("Read aloud", "Vorlesen"), { action: "say", arg: "Practice for you: comparing fractions" }) + ui.btn(t("Start", "Los"), { go: "S4" }) + "</div></div>"
+                '<div class="row">' + ui.btn(t("Read aloud", "Vorlesen"), { action: "say", arg: "Practice for you: comparing fractions" }) + ui.btn(t("Start", "Los"), { action: "openPractice" }) + "</div></div>"
             : "")
         : '<p class="muted">' + t("No messages yet. Your teacher will write to you here.", "Noch keine Nachrichten. Deine Lehrerin schreibt dir hier.") + "</p>";
 
