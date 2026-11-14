@@ -25,6 +25,17 @@
 
   function fixed(q, ch) { return q.ocr.replace(q.suspect, ch); }
 
+  // Full page 1 with the linked region of the current answer and its uncertain character.
+  function scanPage(q, checked) {
+    var sc = q.scan || {};
+    return '<div class="scan"><div class="scan-page" style="width:' + Math.round(100 * zoom) + '%">' +
+      '<img src="' + d.exam.scanPages[0] + '" alt="' + LS.esc(d.student.name) + ', handwritten exam page 1">' +
+      (sc.box ? '<span class="scan-region" style="' + ui.scanPct(sc.box) + '"><b>' + q.label + "</b></span>" : "") +
+      (sc.suspect ? '<span class="scan-suspect' + (checked ? " ok" : "") + '" style="' + ui.scanPct(sc.suspect) + '"></span>' : "") +
+      "</div></div>";
+  }
+
+
   LS.action("ocrAccept", function () {
     var st = LS.state, q = LS.q(st.currentQ);
     if (st.ocrEdit === q.id) {
@@ -82,6 +93,8 @@
   LS.screen({
     id: "T2", role: "teacher", nav: "Exams", title: "Verify OCR text", source: "Figma T2",
     afterRender: function () {
+      var scan = document.querySelector(".scan"), region = scan && scan.querySelector(".scan-region");
+      if (region) scan.scrollTop = Math.max(0, region.offsetTop + region.offsetHeight / 2 - scan.clientHeight / 2);
       var input = document.getElementById("ocr-fix");
       if (!input) return;
       input.addEventListener("input", function () {
@@ -113,7 +126,7 @@
       var scan = ui.card(
         '<div class="row between"><h2>Scanned page 1 of 2</h2><div class="row">' +
           ui.btn("-", { action: "zoom", arg: "-", small: true }) + ui.btn("+", { action: "zoom", arg: "+", small: true }) + "</div></div>" +
-        ui.ph('Scanned exam paper (placeholder)<br><span class="region">' + q.label + " - linked region</span>", Math.round(300 * zoom)));
+        scanPage(q, !!st.checked[q.id]));
 
       var others = d.exam.questions.filter(function (x) { return !x.hidden && x.id !== q.id; });
       var otherList = ui.card("<h2>Other answers (" + others.length + ")</h2>" + others.map(function (x) {
@@ -130,7 +143,7 @@
       var focus = ui.card(
         '<div class="row between"><h2>' + q.label + " - " + (status ? "Checked (" + status + ")" : "Uncertain") +
           ' <span class="muted small">' + (unc.indexOf(q) + 1) + " of " + unc.length + " uncertain</span></h2>" + ui.conf(q.ocrConf) + "</div>" +
-        '<p class="label">Handwriting (cropped)</p>' + ui.ph("cropped handwriting of " + q.label, 70) +
+        '<p class="label">Handwriting (cropped)</p>' + ui.scanCrop(q, !!status) +
         '<p class="label">What the system read (edit if wrong)</p>' +
         (editing
           ? '<div class="read-view editing">' + slotText(q) + "</div>" +

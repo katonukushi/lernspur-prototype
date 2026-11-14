@@ -55,7 +55,7 @@
 
       var answers = ui.card("<h2>The answers behind this flag (" + f.answers.length + ")</h2>" +
         '<div class="grid-3">' + f.answers.map(function (a) {
-          return '<div class="card inner"><p class="small"><b>' + a.exam + "</b></p>" + ui.ph("cropped answer", 60) +
+          return '<div class="card inner"><p class="small"><b>' + a.exam + "</b></p>" + (a.q ? ui.scanCrop({ label: a.exam, scan: { crop: d.exam.questions.filter(function (q) { return q.id === a.q; })[0].scan.crop } }, false, 60) : ui.ph("cropped answer", 60)) +
             '<p class="small"><b>Read as: ' + a.read + '</b></p><p class="muted small">' + a.note + "</p></div>";
         }).join("") + "</div>");
 

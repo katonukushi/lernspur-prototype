@@ -4,6 +4,8 @@
 (function () {
   var ui = LS.ui, d = LS.data, t = LS.t;
   var selected = 0;
+  // Photo of page i: Tim's real handwritten pages (a third or fourth photo repeats them).
+  function paper(i) { var sp = d.exam.scanPages; return sp[i % sp.length]; }
 
   LS.action("examLang", function (v) { LS.state.examLang = v; });
   LS.action("photo", function () {
@@ -29,7 +31,10 @@
           ui.pill("English", { action: "examLang", arg: "EN", on: st.examLang === "EN", disabled: sent }) +
           ui.pill("Deutsch", { action: "examLang", arg: "DE", on: st.examLang === "DE", disabled: sent }) + "</div>");
 
-      var camera = ui.card('<div class="camera">' + '<div class="frame">' + t("Put your page inside the frame", "Leg dein Blatt in den Rahmen") + "</div></div>" +
+      var shown = pages[selected];
+      var camera = ui.card('<div class="camera">' + (shown
+          ? '<div class="frame shot' + (shown.status === "clear" ? "" : " blurry") + '" role="img" aria-label="' + t("Photo of page", "Foto von Seite") + " " + (selected + 1) + '" style="background-image:url(' + paper(selected) + ')"></div>'
+          : '<div class="frame">' + t("Put your page inside the frame", "Leg dein Blatt in den Rahmen") + "</div>") + "</div>" +
         '<div class="row between">' + ui.btn(t("Choose a file", "Datei wählen"), { action: "photo", disabled: sent || pages.length >= 4 }) +
           ui.btn(t("Take photo", "Foto machen"), { action: "photo", primary: true, disabled: sent || pages.length >= 4 }) + "</div>");
 
@@ -41,7 +46,7 @@
           : '<p class="row"><span class="dots"><i class="on"></i><i></i><i></i></span><b>' + t("Too blurry - hold still", "Zu unscharf - halt still") + "</b></p>";
 
       var thumbs = pages.map(function (p, i) {
-        return '<div class="thumb-col"><button type="button" class="thumb' + (i === selected ? " on" : "") + '" data-action="selectPage" data-arg="' + i + '">' + t("Page", "Seite") + " " + (i + 1) + "</button>" +
+        return '<div class="thumb-col"><button type="button" class="thumb paper' + (i === selected ? " on" : "") + (p.status === "clear" ? "" : " blurry") + '" data-action="selectPage" data-arg="' + i + '" style="background-image:url(' + paper(i) + ')"><span>' + t("Page", "Seite") + " " + (i + 1) + "</span></button>" +
           "<b>" + (p.status === "clear" ? t("Clear", "Scharf") : t("Blurry", "Unscharf")) + "</b>" +
           (p.status === "clear" ? ui.btn(t("Delete", "Löschen"), { action: "deletePage", arg: i, disabled: sent })
                                 : ui.btn(t("Retake", "Nochmal"), { action: "retakePage", arg: i, disabled: sent })) + "</div>";

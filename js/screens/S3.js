@@ -51,7 +51,9 @@
           return '<div class="card inner"><p class="muted small">' + t("Question", "Frage") + " " + (i + 1) + "</p>" +
             (pic ? '<p class="symbol">' + SYMBOL[l] + "</p>" : "") + "<b>" + t(l, DE[l]) + "</b></div>";
         }).join("") + "</div>" +
-        (st.showPaper ? ui.ph(t("My paper with friendly teacher notes", "Mein Blatt mit Notizen"), 160) : ""));
+        (st.showPaper ? '<div class="paper-view">' + d.exam.scanPages.map(function (src, i) {
+          return '<img src="' + src + '" alt="' + t("My paper, page ", "Mein Blatt, Seite ") + (i + 1) + '">';
+        }).join("") + "</div>" : ""));
 
       return preview + '<div class="split">' + left +
         '<div class="stack"><div class="split even">' + well + msg + "</div>" + practise + answers + "</div></div>" +

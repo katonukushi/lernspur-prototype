@@ -58,6 +58,25 @@ LS.ui = {
     return '<section class="card' + (extra ? " " + extra : "") + '">' + inner + "</section>";
   },
 
+  // Position a pixel box of the scanned exam page as percentages (of the page, or of a crop box).
+  scanPct: function (b, ref) {
+    var S = LS.data.exam.scanSize, W = ref ? ref[2] : S[0], H = ref ? ref[3] : S[1], x0 = ref ? ref[0] : 0, y0 = ref ? ref[1] : 0;
+    return "left:" + ((b[0] - x0) / W * 100).toFixed(2) + "%;top:" + ((b[1] - y0) / H * 100).toFixed(2) + "%;width:" +
+      (b[2] / W * 100).toFixed(2) + "%;height:" + (b[3] / H * 100).toFixed(2) + "%";
+  },
+
+  // Cropped handwriting of one exam question, cut from the scanned page. checked: the uncertain character is resolved.
+  scanCrop: function (q, checked, maxH) {
+    var c = q.scan && q.scan.crop, S = LS.data.exam.scanSize, src = LS.data.exam.scanPages[0];
+    if (!c) return LS.ui.ph("cropped handwriting of " + q.label, 70);
+    maxH = maxH || 150;
+    var bg = "background-image:url(" + src + ");background-size:" + (S[0] / c[2] * 100).toFixed(2) + "% auto;" +
+      "background-position:" + (c[0] / (S[0] - c[2]) * 100).toFixed(2) + "% " + (c[1] / (S[1] - c[3]) * 100).toFixed(2) + "%;" +
+      "aspect-ratio:" + c[2] + "/" + c[3] + ";max-width:" + Math.round(maxH * c[2] / c[3]) + "px";
+    return '<div class="scan-crop" role="img" aria-label="Handwriting of ' + q.label + '" style="' + bg + '">' +
+      (q.scan.suspect ? '<span class="scan-suspect' + (checked ? " ok" : "") + '" style="' + LS.ui.scanPct(q.scan.suspect, c) + '"></span>' : "") + "</div>";
+  },
+
   // Image placeholder.
   ph: function (label, height, extra) {
     return '<div class="ph' + (extra ? " " + extra : "") + '" style="min-height:' + (height || 120) + 'px"><span>' + label + "</span></div>";

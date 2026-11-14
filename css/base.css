@@ -180,3 +180,21 @@ textarea.field { resize: vertical; }
 .shell.student .btn, .shell.student button.pill, .shell.student .seg button, .shell.student .topbar a.btn { min-height: 48px; }
 .shell.student .pill { min-height: 32px; }
 .shell.student button.pill { padding-left: 16px; padding-right: 16px; }
+
+/* Scanned exam paper (T2 page view and cropped handwriting, S2 thumbnails) */
+.scan { height: 380px; overflow: auto; border: 1px solid var(--line, #d0d4d9); border-radius: 6px; background: #f3f4f6; margin-bottom: var(--gap-s); }
+.scan-page { position: relative; margin: 0 auto; aspect-ratio: 1400 / 1981; background: #fff; }
+.scan-page img { display: block; width: 100%; height: 100%; }
+.scan-region { position: absolute; border: 2px solid var(--accent, #2563eb); border-radius: 4px; background: rgba(37, 99, 235, .06); }
+.scan-region b { position: absolute; top: -2px; right: -2px; transform: translateY(-100%); padding: 1px 8px; border-radius: 4px 4px 0 0; background: var(--accent, #2563eb); color: #fff; font-size: 12px; }
+.scan-suspect { position: absolute; border: 2px dashed var(--low, #c2410c); border-radius: 4px; background: rgba(234, 88, 12, .14); }
+.scan-suspect.ok { border-style: solid; border-color: var(--ok, #15803d); background: rgba(21, 128, 61, .10); }
+.scan-crop { position: relative; width: 100%; border: 1px solid var(--line, #d0d4d9); border-radius: 6px; background-color: #fff; background-repeat: no-repeat; margin-bottom: var(--gap-s); }
+.thumb.paper { padding: 0; overflow: hidden; position: relative; background-color: #fff; background-size: 100% auto; background-position: center top; background-repeat: no-repeat; }
+.thumb.paper span { position: absolute; left: 0; right: 0; bottom: 0; padding: 2px 0; background: rgba(255, 255, 255, .88); font-size: 12px; font-weight: 700; color: var(--ink, #1d1d1f); }
+.thumb.paper.blurry { filter: blur(1.6px); }
+.camera .frame.shot { padding: 0; border-style: solid; background-size: cover; background-position: center top; aspect-ratio: 1400 / 1981; width: auto; height: 240px; }
+.camera .frame.shot.blurry { filter: blur(2.5px); }
+.paper-view { max-height: 420px; overflow: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+.paper-view img { display: block; width: 100%; }
+.paper-view img + img { border-top: 1px solid var(--line); }

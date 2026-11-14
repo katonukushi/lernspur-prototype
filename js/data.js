@@ -20,19 +20,25 @@ LS.data = {
     date: "Oct 9",
     uploaded: "Oct 9, 14:10",
     pagesExpected: 2,
+    // Tim's real handwritten paper (filled in by the team on a tablet). Boxes are pixels on the 1400 x 1981 page image.
+    scanPages: ["img/exam-p1.jpg", "img/exam-p2.jpg"],
+    scanSize: [1400, 1981],
     maxPoints: 25,
     shownNote: "Q1-Q3 of 5 shown",
     questions: [
       { id: "q1", label: "Q1", ocr: "3/4 ist größer als 2/3", ocrConf: 96, max: 5, ai: 5, aiSure: 94,
+        scan: { box: [185, 540, 1100, 75], crop: [185, 535, 450, 85] },
         why: "Correct comparison." },
       { id: "q2", label: "Q2", ocr: "S/8 ist größer als 3/4", ocrConf: 41, suspect: "S", suggestions: ["5", "3", "8"],
-        steps: [{ text: "Schritt 1: 8 ist größer als 4", sure: true }, { text: "Schritt 2: also ist S/8 größer", sure: false }],
+        steps: [{ text: "Schritt 1: 8 ist als 4", sure: true }, { text: "Schritt 2: S/8 auch größer", sure: false }],
+        scan: { box: [185, 935, 1100, 145], crop: [185, 930, 575, 155], suspect: [434, 1006, 50, 44] },
         max: 5, ai: 0, aiSure: 71, why: "Compared denominators only." },
       { id: "q3", label: "Q3", ocr: "1/2 = 2/9", ocrConf: 38, suspect: "9", suggestions: ["4", "6"],
-        steps: [{ text: "Schritt 1: 1 · 2 = 2", sure: true }, { text: "Schritt 2: 2 · 2 = 9", sure: false }],
+        steps: [{ text: "1 · 2 = 2", sure: true }, { text: "2 · 2 = 9", sure: false }],
+        scan: { box: [185, 1300, 1100, 330], crop: [185, 1295, 615, 340], suspect: [426, 1560, 48, 60] },
         max: 5, ai: 2, aiSure: 48, why: "Missing explanation step." },
       // Not shown on the screens ("Q1-Q3 of 5 shown"), but part of the total.
-      { id: "q4", label: "Q4", ocr: "6 · 7 = 42", ocrConf: 97, max: 5, ai: 5, aiSure: 97, why: "Correct.", hidden: true },
+      { id: "q4", label: "Q4", ocr: "42", ocrConf: 97, max: 5, ai: 5, aiSure: 97, why: "Correct.", hidden: true },
       { id: "q5", label: "Q5", ocr: "24 : 4 = 6 Äpfel", ocrConf: 95, max: 5, ai: 5, aiSure: 92, why: "Correct.", hidden: true }
     ]
   },
@@ -73,7 +79,7 @@ LS.data = {
     answers: [
       { exam: "Test 1 · Q4 · Oct 2", read: "5/8 > 3/4", note: "Compared denominators only" },
       { exam: "Test 2 · Q3 · Oct 6", read: "2/3 < 2/5", note: "Compared denominators only" },
-      { exam: "Fractions Quiz · Q2 · Oct 9", read: "5/8 > 3/4", note: "Compared denominators only" }
+      { exam: "Fractions Quiz · Q2 · Oct 9", read: "5/8 > 3/4", note: "Compared denominators only", q: "q2" }
     ]
   },
 
