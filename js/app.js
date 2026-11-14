@@ -20,12 +20,13 @@ LS.FLOW = [
 ];
 
 LS.prefs = (function () {
-  var p = { theme: "lernspur", notes: true, demo: true };
+  var p = { theme: "lernspur", notes: true, demo: true, frames: true };
   try { Object.assign(p, JSON.parse(localStorage.getItem("lernspur-prefs") || "{}")); } catch (e) { /* ignore */ }
   var q = new URLSearchParams(location.search);
   if (q.get("theme")) p.theme = q.get("theme");
   if (q.get("demo") === "off") p.demo = false;
   if (q.get("notes") === "off") p.notes = false;
+  if (q.get("frames") === "off") p.frames = false;
   return p;
 })();
 
@@ -38,7 +39,40 @@ LS.applyPrefs = function () {
   document.getElementById("theme-css").href = "css/themes/" + LS.prefs.theme + ".css";
   document.body.classList.toggle("notes-off", !LS.prefs.notes);
   document.body.classList.toggle("demo-off", !LS.prefs.demo);
+  if (LS.screens && document.getElementById("app").innerHTML) LS.render();
 };
+
+// ---------- device frames ----------
+// Each role is shown on its own device: teacher = desktop (full window), child = tablet, parent = phone.
+// On a big screen the child and parent views sit inside a tablet or phone frame, scaled down to fit the window.
+// On a real tablet or phone (window not much wider than the device) the frame is skipped and the app fills the screen.
+
+LS.DEVICES = {
+  tablet: { w: 1194, h: 834, label: "Child view · tablet (1194 × 834, as in Figma)" },
+  phone: { w: 390, h: 844, label: "Parent view · phone (390 × 844)" }
+};
+
+LS.deviceFor = function (role) {
+  if (!LS.prefs.frames) return null;
+  var dev = role === "student" ? "tablet" : role === "parent" ? "phone" : null;
+  if (!dev) return null;
+  return window.innerWidth > LS.DEVICES[dev].w + 120 ? dev : null;
+};
+
+LS.fitDevice = function () {
+  var el = document.getElementById("device");
+  if (!el) return;
+  el.style.zoom = 1;
+  var bar = document.querySelector(".demo-bar");
+  var barH = bar && LS.prefs.demo ? bar.offsetHeight : 0;
+  var cap = document.querySelector(".device-caption");
+  var capH = cap ? cap.offsetHeight + 8 : 0;
+  var availW = window.innerWidth - 48, availH = window.innerHeight - barH - capH - 40;
+  var scale = Math.min(1, availW / el.offsetWidth, availH / el.offsetHeight);
+  el.style.zoom = Math.max(0.4, scale).toFixed(3);
+};
+
+LS.scroller = function () { return document.getElementById("screen") || document.scrollingElement; };
 
 LS.current = function () {
   var id = location.hash.replace(/^#\/?/, "") || LS.DEFAULT_SCREEN;
@@ -61,7 +95,7 @@ LS.teacherShell = function (def, body) {
   var d = LS.data, st = LS.state;
   var alerts = (st.upload === "sent" && !st.ocrConfirmed ? 1 : 0) + (st.ocrConfirmed && !st.committed ? 1 : 0) +
     (st.committed && st.flag === "open" ? 1 : 0) + 2;
-  var nav = [["Dashboard", "T1"], ["Exams", "T2"], ["Students", "T5"], ["Messages", null]].map(function (n) {
+  var nav = [["Dashboard", "T1"], ["Exams", "T2"], ["Students", "T5"], ["Class", "T7"], ["Messages", null]].map(function (n) {
     var on = def.nav === n[0];
     return n[1]
       ? '<a href="#" data-go="' + n[1] + '" class="' + (on ? "on" : "") + '">' + n[0] + "</a>"
@@ -129,6 +163,7 @@ LS.demoBar = function (id) {
       '<select data-demo="screen" aria-label="Jump to screen">' + screens + "</select>" +
       '<select data-demo="theme" aria-label="Theme">' + themes + "</select>" +
       '<label><input type="checkbox" data-demo="notes"' + (LS.prefs.notes ? " checked" : "") + "> Notes</label>" +
+      '<label title="Child on a tablet, parent on a phone"><input type="checkbox" data-demo="frames"' + (LS.prefs.frames ? " checked" : "") + "> Device frames</label>" +
       '<button type="button" data-demo="reset">Reset demo</button>' +
       '<button type="button" data-demo="hide" title="Show again with the D key">Hide</button>' +
     "</span></div>";
@@ -140,17 +175,26 @@ LS.render = function () {
   var id = LS.current();
   var def = LS.screens[id];
   var prevId = document.body.dataset.screen;
-  var scrollY = window.scrollY;
   document.title = def.title + " - " + LS.data.product;
   if (def.onEnter) def.onEnter(LS.state);
   var body = '<p class="id-tag">' + id + " " + def.title + (def.source ? " <span>(" + def.source + ")</span>" : "") + "</p>" + def.render(LS.state);
   var shell = def.role === "teacher" ? LS.teacherShell : def.role === "parent" ? LS.parentShell : LS.studentShell;
+  var scrollEl = LS.scroller(), scrollY = scrollEl ? scrollEl.scrollTop : 0;
+  var dev = LS.deviceFor(def.role);
+  var html = shell(def, body);
+  if (dev) {
+    var status = dev === "phone" ? '<div class="device-status" aria-hidden="true"><span>9:41</span><i></i></div>' : "";
+    html = '<div class="stage"><div class="device device-' + dev + '" id="device">' + status + '<div class="device-screen" id="screen">' + html + "</div></div>" +
+      '<p class="device-caption">' + LS.DEVICES[dev].label + "</p></div>";
+  }
   document.body.dataset.screen = id;
   document.body.dataset.role = def.role;
-  document.getElementById("app").innerHTML = shell(def, body);
+  document.body.classList.toggle("framed", !!dev);
+  document.getElementById("app").innerHTML = html;
   document.getElementById("demo").innerHTML = LS.demoBar(id);
+  LS.fitDevice();
   // Same screen re-rendered after a click: keep the scroll position. New screen: start at the top.
-  window.scrollTo(0, prevId === id ? scrollY : 0);
+  LS.scroller().scrollTop = prevId === id ? scrollY : 0;
   if (def.afterRender) def.afterRender(prevId !== id);
   LS.save();
 };
@@ -163,6 +207,7 @@ document.addEventListener("click", function (e) {
   if (el.matches("select, input")) return;
   if (el.dataset.demo === "reset") { LS.reset(); LS.go(LS.DEFAULT_SCREEN); return; }
   if (el.dataset.demo === "hide") { LS.prefs.demo = false; LS.savePrefs(); LS.applyPrefs(); return; }
+  if (el.dataset.demo === "frames") return;
   if (el.dataset.demo) return;
   e.preventDefault();
   if (el.dataset.action) {
@@ -196,6 +241,7 @@ document.addEventListener("change", function (e) {
   if (el.dataset.demo === "screen") LS.go(el.value);
   if (el.dataset.demo === "theme") { LS.prefs.theme = el.value; LS.savePrefs(); LS.applyPrefs(); }
   if (el.dataset.demo === "notes") { LS.prefs.notes = el.checked; LS.savePrefs(); LS.applyPrefs(); }
+  if (el.dataset.demo === "frames") { LS.prefs.frames = el.checked; LS.savePrefs(); LS.render(); }
   if (el.dataset.change) {
     var fn = LS.actions[el.dataset.change];
     var next = fn && fn(el.value, el);
@@ -206,6 +252,7 @@ document.addEventListener("change", function (e) {
 document.addEventListener("keydown", function (e) {
   if (e.target.matches("input, textarea, select")) return;
   if (e.key === "d" || e.key === "D") { LS.prefs.demo = !LS.prefs.demo; LS.savePrefs(); LS.applyPrefs(); }
+  if (e.key === "f" || e.key === "F") { LS.prefs.frames = !LS.prefs.frames; LS.savePrefs(); LS.render(); }
 });
 
 // Shared actions
@@ -214,4 +261,9 @@ LS.action("readAloud", function () { LS.state.readAloud = !LS.state.readAloud; }
 LS.action("say", function (text) { LS.speak(text); return false; });
 
 window.addEventListener("hashchange", LS.render);
+window.addEventListener("resize", function () {
+  // Crossing the size where a frame is used (or not) needs a new render; otherwise only rescale.
+  var def = LS.screens[LS.current()];
+  if (!!LS.deviceFor(def.role) !== document.body.classList.contains("framed")) LS.render(); else LS.fitDevice();
+});
 window.addEventListener("DOMContentLoaded", function () { LS.applyPrefs(); LS.render(); });

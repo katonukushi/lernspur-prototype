@@ -47,3 +47,53 @@
 .table tr.hl td { background: var(--soft); }
 a.card:hover, button.answer-row:hover { border-color: var(--accent); }
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.answer-row.on { border: 2px solid var(--accent); background: var(--selected); }
+
+/* Type scale per device, from the Figma frames (text styles measured in the export of 14.11.):
+   teacher desktop  h1 32 / exam pages 24, h2 18, body 16, small 14, tiny 12
+   child tablet     h1 34, h2 22, body 18, small 16, tiny 14 (bigger text for Grades 1-5)
+   parent phone     h1 24, h2 18, body 16, small 14, tiny 12 */
+.shell.teacher { font-size: 16px; }
+.shell.teacher h1 { font-size: 32px; }
+.shell.teacher .page-head h1 { font-size: 24px; }
+.shell.teacher h2 { font-size: 18px; }
+.shell.teacher h3 { font-size: 16px; }
+.shell.teacher .small, .shell.teacher .hint, .shell.teacher .label, .shell.teacher .pill, .shell.teacher .table td { font-size: 14px; }
+.shell.teacher .tiny, .shell.teacher .table th { font-size: 12px; }
+.shell.teacher .brand { font-size: 20px; }
+
+.shell.student { font-size: 18px; }
+.shell.student h1 { font-size: 34px; }
+.shell.student h2, .shell.student .lead, .shell.student .page-title, .shell.student .brand { font-size: 22px; }
+.shell.student h3 { font-size: 18px; }
+.shell.student .btn { font-size: 18px; }
+.shell.student .topbar .btn, .shell.student .seg button, .shell.student .small, .shell.student .muted.small, .shell.student .pill, .shell.student .label, .shell.student .hint { font-size: 16px; }
+.shell.student .tiny { font-size: 14px; }
+.shell.student .big-stars .stars { font-size: 40px; }
+.shell.student .exam-card .big-stars .stars { font-size: 22px; }
+
+.shell.parent { font-size: 16px; }
+.shell.parent h1 { font-size: 24px; }
+.shell.parent h2 { font-size: 18px; }
+.shell.parent .small, .shell.parent .hint, .shell.parent .label { font-size: 14px; }
+.shell.parent .tiny { font-size: 12px; }
+.shell.parent .brand { font-size: 16px; }
+
+/* Details from the Figma frames */
+.stepper { align-items: center; }
+.stepper li.sep { padding: 0 2px; color: var(--muted); }
+.shell.teacher .btn { font-size: 16px; }
+.shell.teacher .btn.small { font-size: 14px; }
+.shell.student .stepper li { font-size: 16px; }
+.shell.student .stepper li:not(.sep) { border: 1px solid var(--line); background: var(--surface); }
+.shell.student .stepper li.current { border: 1.5px solid var(--accent); background: var(--selected); }
+.shell.student .camera { min-height: 340px; }
+.shell.student .thumb { width: 116px; height: 64px; }
+.shell.student .thumb.add { height: 112px; }
+.shell.student .center > .stepper { margin-bottom: 12px; }
+.shell.student .pill.big { font-size: 18px; font-weight: 600; }
+@media (max-width: 600px) {
+  .shell.student .thumb { width: 84px; }
+  .shell.student .camera .frame { width: 150px; }
+  .shell.student .row.between { flex-wrap: wrap; }
+}

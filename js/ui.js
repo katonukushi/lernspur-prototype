@@ -90,10 +90,13 @@ LS.ui = {
   },
 
   // Process stepper: steps = [label], current = index, done = number of finished steps.
+  // Separators as in Figma: ">" on teacher screens, "-" on the child's screens.
   stepper: function (steps, current, done) {
+    var def = LS.screens[LS.current()], sep = def && def.role === "student" ? "-" : ">";
     return '<ol class="stepper">' + steps.map(function (s, i) {
       var cls = i === current ? "current" : i < done ? "done" : "";
-      return '<li class="' + cls + '">' + (i + 1) + " " + s + (i < done && i !== current ? " - done" : "") + "</li>";
+      return (i ? '<li class="sep" aria-hidden="true">' + sep + "</li>" : "") +
+        '<li class="' + cls + '">' + (i + 1) + " " + s + (i < done && i !== current ? " - done" : "") + "</li>";
     }).join("") + "</ol>";
   },
 

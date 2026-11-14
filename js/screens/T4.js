@@ -46,7 +46,7 @@
       var f = d.flag;
       var head = '<div class="page-head"><div><h1>Evidence Trail - ' + d.student.name + " - Fractions</h1>" +
         '<p class="muted">Suggested red flag: ' + f.title.toLowerCase() + "</p></div>" +
-        '<div class="row">' + ui.pill("AI suggestion") + ui.btn("Open Learning Trail", { go: "T5" }) + "</div></div>";
+        '<div class="row">' + ui.pill("AI suggestion") + ui.btn("Compare with class", { go: "T7" }) + ui.btn("Open Learning Trail", { go: "T5" }) + "</div></div>";
 
       var across = ui.card('<div class="row between wrap"><h2>Across exams</h2><div class="row"><span class="muted small">' + f.concept + ":</span>" +
           ui.pill("Concept gap", { action: "mistakeType", arg: "concept", on: st.mistakeType === "concept" }) +

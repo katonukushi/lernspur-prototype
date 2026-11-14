@@ -10,11 +10,24 @@ The teacher stays in control at every step.
 
 ## Status
 
-This is a deliberately **low-fidelity** first version: rough boxes, approximate positions, no animations.
-It contains every function of the workflow so the team can click through it and iterate.
+Interactive prototype of the final Figma design ("LernSpur - M3 Prototype", pages Teacher, Student, Parent and Prototype Flow): same screens, states, wording and type scale.
+It contains every function of the workflow, so the whole demo story can be clicked through in the student, teacher and parent view.
 The visual design is a separate layer (a theme). The default theme `lernspur` uses the colors and type of the Figma design (page "00 Foundations"); `wire` is the earlier grayscale low-fi look.
 
 OCR, AI grades and feedback are simulated with hard-coded demo data, as allowed by the project brief.
+
+### Devices
+
+Each role is shown on the device it is designed for:
+
+| Role | Device | How it is shown |
+|---|---|---|
+| Teacher (T1-T7) | Desktop / laptop | Full browser window |
+| Child (S1-S4) | Tablet, 1194 × 834 landscape (as in Figma) | Inside a tablet frame on a big screen |
+| Parent (P1) | Phone, 390 × 844 | Inside a phone frame on a big screen |
+
+The frames scale down to fit the window. On a real tablet or phone the frame is skipped and the app fills the screen.
+Turn the frames off with "Device frames" in the demo bar, the F key, or `index.html?frames=off`.
 
 ## Run it locally
 
@@ -44,10 +57,13 @@ Click the numbered steps from left to right, or follow the flow inside the app:
 7. **Teacher, T6:** edit the feedback, adjust the practice pack, check the pupil preview (its "Start practice" button opens the student view as a preview), then "Publish to student".
 8. **Student, S1 / S3 / S4:** while the teacher checks, "My results" says "Waiting for my teacher"; after publishing the bell shows the new messages; open the result, then finish the practice pack ("Mission done!", then "Back to My Trail").
 9. **Teacher, T5:** after Tim finishes the pack, "Close support focus" (only the teacher can close it; "Reopen focus" undoes it).
-10. **Parent, P1 (phone layout):** before the teacher publishes, sees only "Being checked"; afterwards the checked grade, the Learning Trail, the confirmed support focus with a help-at-home example, the practice mission, and a message sheet with quick replies.
+10. **Parent, P1 (phone):** before the teacher publishes, sees only "Being checked"; afterwards the checked grade, the Learning Trail, the confirmed support focus with a help-at-home example, the practice mission, and a message sheet with quick replies.
+
+11. **Teacher, T7 (optional, class-wide):** "Class" in the side menu, "Open radar" on T1, or "Compare with class" on T4. Simplifying fractions is class-wide (50 % of 4B), so LernSpur suggests "Reteach to whole class" instead of 11 red flags. Tim's error (comparing fractions, 3 pupils) stays an individual red flag and links back to his Evidence Trail.
 
 "Reset demo" starts over.
 "Notes" shows or hides the screen IDs and annotations.
+"Device frames" or the F key shows or hides the tablet and phone frames.
 "Hide" or the D key hides the demo bar, for example to record the walkthrough video.
 
 ## Screens
@@ -64,6 +80,7 @@ Click the numbered steps from left to right, or follow the flow inside the app:
 | T4 | Evidence Trail: learning gap + red flag across exams | Figma T4 |
 | T5 | Learning Trail of one student | Figma T5 |
 | T6 | Feedback and practice pack | Figma T6 |
+| T7 | Class Gap Radar: recurring errors across the class (optional feature D4) | Fady's M1 (U3) and M2 (W6) |
 | P1 | Parent summary (bonus, phone) | Figma P1, P1b, P1c (based on Leena's P1 wireframes) |
 
 The screens follow the team's Figma skeletons ("LernSpur - M3 Prototype"), which build on our Milestone 2 wireframes.
@@ -75,7 +92,7 @@ index.html            loads everything, in order
 css/base.css          layout only: columns, spacing, rough positions
 css/themes/lernspur.css  the designed look (Figma tokens), default
 css/themes/wire.css   the earlier low-fi look (grayscale): colors, fonts, borders
-css/demo.css          the demo bar (not part of the product)
+css/demo.css          the demo bar and the device frames (not part of the product)
 js/data.js            all demo content (exam, OCR text, feedback, progress)
 js/state.js           shared demo state that links the student and teacher views
 js/ui.js              small building blocks: button, card, placeholder, note

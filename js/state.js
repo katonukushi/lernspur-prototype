@@ -3,7 +3,7 @@
 
 window.LS = window.LS || {};
 
-LS.STORAGE_KEY = "lernspur-demo-v3";
+LS.STORAGE_KEY = "lernspur-demo-v4";
 
 LS.initialState = function () {
   var d = LS.data, answers = {}, grade = {};
@@ -66,7 +66,13 @@ LS.initialState = function () {
     // parent
     parentCompose: false,
     parentMsg: "",
-    parentSent: false
+    parentSent: false,
+
+    // T7 class gap radar
+    radarSel: "simplify",
+    radarThreshold: 40,
+    radarDecision: {},      // error id: "accepted" | "assigned" | "dismissed"
+    radarReason: {}
   };
 };
 

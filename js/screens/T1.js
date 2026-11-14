@@ -58,7 +58,9 @@
             "</div>" +
             '<div class="table-wrap"><table class="table"><thead><tr><th>Student</th><th>Exam</th><th>Lang</th><th>Uploaded</th><th>Status</th><th>Uncertain OCR items</th><th></th></tr></thead>' +
             "<tbody>" + rows + "</tbody></table></div>") +
-          ui.card("<h2>Recurring weaknesses (suggested)</h2>" + weak) +
+          '<div class="stack">' + ui.card("<h2>Recurring weaknesses (suggested)</h2>" + weak) +
+            ui.card("<h2>Class gap radar</h2>" + '<p class="muted small">Simplifying fractions - 50 % of 4B made the same error</p>' +
+              ui.btn("Open radar", { go: "T7" })) + "</div>" +
         "</div>";
     }
   });

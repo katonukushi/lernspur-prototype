@@ -107,6 +107,12 @@ LS.data = {
   message: "\"Nice try on Q2! Look at the bottom number too.\"",
   example: "Example: 3/4 = 6/8, and 6/8 is more than 5/8. So 3/4 is bigger!",
   extraHelp: "Frau Weber will sit with you on Monday and look at fractions together.",
+  // German versions of the fixed student texts (S3), used when the pupil switches to DE.
+  de: {
+    message: "\"Guter Versuch bei Frage 2! Schau auch auf die untere Zahl.\"",
+    example: "Beispiel: 3/4 = 6/8, und 6/8 ist mehr als 5/8. Also ist 3/4 größer!",
+    extraHelp: "Frau Weber setzt sich am Montag mit dir zusammen und ihr schaut euch Brüche gemeinsam an."
+  },
   skillsGot: ["Multiplication", "Word problems", "Reading clocks"],
   skillsGrowing: [{ name: "Adding fractions", done: 4, of: 5 }],
   otherPacks: [{ name: "Times tables", done: true }],
@@ -120,5 +126,23 @@ LS.data = {
     wentWell: "Tim got all the multiplication questions right.",
     helpAtHome: "Draw two bars of the same length and split both into equal parts. Then compare the coloured parts.",
     quickReplies: ["How can I help with fractions at home?", "Can we arrange a short meeting?", "Thank you for the feedback"]
+  },
+
+  // Class Gap Radar (T7, optional feature D4): confirmed papers of class 4B.
+  // trend = pupils with this error in Quiz, Test 1, Test 2, Fractions Quiz (same order as exams above).
+  classGaps: {
+    pupils: 24,
+    graded: 22,
+    errors: [
+      { id: "simplify", concept: "Simplifying fractions", pupils: 11, trend: [2, 4, 7, 11],
+        example: "4/8 left as 4/8 instead of 1/2", pack: "Practice pack: simplifying fractions" },
+      { id: "compare", concept: "Comparing fractions (different denominators)", pupils: 3, trend: [1, 2, 3, 3],
+        example: "5/8 is bigger than 3/4 because 8 > 4", names: ["Tim Becker", "Leon Fischer", "Anna Klein"] },
+      { id: "whole", concept: "Fraction of a whole (word problems)", pupils: 2, trend: [3, 2, 2, 2],
+        example: "4 of 8 slices written as 8/4", names: ["Mia Schmidt", "Jonas Wolf"] },
+      { id: "units", concept: "Reading the question / units", pupils: 1, trend: [1, 0, 2, 1],
+        example: "Answer without the unit \"Äpfel\"", names: ["Lena Braun"] }
+    ],
+    dismissReasons: ["Already planned", "Too few papers", "Other"]
   }
 };

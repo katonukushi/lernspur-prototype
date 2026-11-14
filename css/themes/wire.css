@@ -154,3 +154,4 @@ button.answer-row:hover { border-color: var(--line-strong); }
 .check-ic { border: 2px solid #9a9a9a; border-radius: 50%; font-size: 13px; font-weight: 700; color: var(--accent-ink); }
 .check-ic.on { background: var(--accent); border-color: var(--accent); }
 .tile-icon { background: var(--soft); border-radius: 8px; color: var(--ink); }
+.answer-row.on { border: 2px solid var(--line-strong); }

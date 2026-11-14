@@ -37,12 +37,12 @@
         '<div class="row">' + ui.pill(t("Picture view", "Bilder"), { action: "view", arg: "picture", on: pic }) + ui.pill(t("Text view", "Text"), { action: "view", arg: "text", on: !pic }) + "</div></div>", "tall");
 
       var well = ui.card("<h2>" + t("What I did well", "Das kann ich schon") + "</h2><p>" + LS.esc(st.well) + "</p>");
-      var msg = ui.card("<h2>" + t("Message from", "Nachricht von") + " " + d.teacher.name + "</h2><p>" + d.message + "</p>" +
-        '<div class="row wrap">' + ui.btn(t("Read aloud", "Vorlesen"), { action: "say", arg: d.message }) +
+      var msg = ui.card("<h2>" + t("Message from", "Nachricht von") + " " + d.teacher.name + "</h2><p>" + t(d.message, d.de.message) + "</p>" +
+        '<div class="row wrap">' + ui.btn(t("Read aloud", "Vorlesen"), { action: "say", arg: t(d.message, d.de.message) }) +
         (st.thanked ? ui.pill(t("Sent: Thank you!", "Gesendet: Danke!"), { on: true }) : ui.btn(t("Thank you", "Danke"), { action: "thanks", disabled: st.preview })) + "</div>");
       var practise = ui.card("<h2>" + t("Let's practise next", "Das üben wir als Nächstes") + "</h2><p>" + LS.esc(st.next) + "</p>" +
-        '<div class="soft-box">' + d.example + "</div>" +
-        (st.showHelp ? '<div class="banner info">' + d.extraHelp + "</div>" : "") +
+        '<div class="soft-box">' + t(d.example, d.de.example) + "</div>" +
+        (st.showHelp ? '<div class="banner info">' + t(d.extraHelp, d.de.extraHelp) + "</div>" : "") +
         '<div class="row between wrap">' + ui.pill(t("Extra help from your teacher", "Extra-Hilfe von deiner Lehrerin"), { action: "help", on: st.showHelp }) +
           (st.packAttach ? ui.btn(t("Start practice", "Üben starten"), { go: "S4", primary: true, disabled: st.preview }) : "") + "</div>", "emph");
       var answers = ui.card('<div class="row between"><h2>' + t("My answers", "Meine Antworten") + "</h2>" + ui.btn(t("See my paper", "Mein Blatt ansehen"), { action: "paper" }) + "</div>" +
