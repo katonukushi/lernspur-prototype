@@ -65,6 +65,7 @@ a.card:hover { border-color: var(--line-strong); }
 .btn[disabled] { background: #e2e2e2; color: #9a9a9a; border-color: #e2e2e2; }
 .pill { background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 999px; font-size: 13px; }
 .pill.on { border: 1.5px solid var(--line-strong); font-weight: 700; }
+.pill.off { color: var(--muted); border-style: dashed; }
 .pill.dark { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; }
 .pill.low { background: var(--low-bg); color: var(--low); border-color: var(--low); }
 button.pill[disabled] { color: #9a9a9a; }

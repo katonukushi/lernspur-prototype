@@ -32,6 +32,7 @@
 .seg { border-color: #828a84; }
 .pill.dark, .pill.on { border-color: var(--accent); }
 .pill.low { border-color: var(--low); }
+.pill.off { color: var(--muted); background: transparent; border-style: dashed; cursor: default; }   /* not available yet (no exams in this subject) */
 .card.emph, .card.focus-card { border-color: var(--accent); }
 .card.focus-card { border-left-color: var(--accent); }
 .stepper li.current { border-color: var(--accent); background: var(--selected); }

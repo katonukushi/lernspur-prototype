@@ -67,7 +67,7 @@
             ui.btn(st.practice > 2 ? t("Next question", "Nächste Frage") + " (" + st.practice + "/" + d.pack.size + ")" : t("Start", "Los"), { action: "practise", primary: true }))
         : '<p class="muted small">' + t("New packs from your teacher show up here.", "Neue Pakete von deiner Lehrerin erscheinen hier.") + "</p>");
 
-      return '<div class="row end">' + ui.pill("Math", { on: true }) + ui.pill("Science") + "</div>" +
+      return '<div class="row end">' + ui.pill("Math", { on: true }) + '<span class="pill off" aria-disabled="true" title="' + t("No Science exams yet", "Noch keine Science-Prüfungen") + '">Science</span>' + "</div>" +
         ui.card("<h2>" + t("My exams", "Meine Prüfungen") + '</h2><div class="trail exams">' + exams + "</div>" +
           '<p class="muted small">' + t("Only your own exams. No class ranking.", "Nur deine eigenen Prüfungen. Kein Vergleich mit der Klasse.") + "</p>") +
         '<div class="grid-3">' +
