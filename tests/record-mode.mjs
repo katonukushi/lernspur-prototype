@@ -26,9 +26,9 @@ const BROWSERS = [
   "/usr/bin/chromium", "/usr/bin/google-chrome"
 ].filter(Boolean);
 
-// KLM operator times (Lecture 3): M + P + B per click, plus H between mouse and keyboard.
-const KLM = { M: 1.35, P: 1.1, B: 0.2, K: 0.28, H: 0.4 };
-const CLICK = KLM.M + KLM.P + KLM.B;
+// KLM operator times from Tutorial 4 (same as the M3 report): click = M P BB, key press = M H K.
+const KLM = { M: 1.2, P: 1.1, BB: 0.2, K: 0.28, H: 0.4 };
+const CLICK = KLM.M + KLM.P + KLM.BB;
 const KEY = KLM.M + KLM.H + KLM.K;
 
 // ---------- static server ----------
@@ -118,7 +118,7 @@ function endSegments() {
 await page.goto(BASE + "index.html?mode=record");
 await page.waitForSelector("#app .shell");
 
-segment("1 Student uploads (S2)", 25);
+segment("1 Student uploads (S2)", 30);
 ok((await screen()) === "S2", "starts at S2");
 ok(await page.evaluate(() => getComputedStyle(document.querySelector(".demo-bar")).display === "none"), "demo bar hidden");
 ok(await page.evaluate(() => [...document.querySelectorAll(".note, .id-tag, .device-caption")].every((e) => e.offsetParent === null)), "notes, ID tags and device caption hidden");
