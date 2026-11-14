@@ -218,5 +218,5 @@
   history.replaceState(null, "", location.pathname + location.search + "#/S2");
   window.addEventListener("DOMContentLoaded", function () { document.body.classList.add("record"); });
 
-  LS.record = { play: play, next: next, reset: reset, hideCard: hideCard, cardShown: function () { return !!card; } };
+  LS.record = { play: play, script: SCRIPT, say: say, dur: dur, next: next, reset: reset, hideCard: hideCard, cardShown: function () { return !!card; } };
 })();
