@@ -250,7 +250,7 @@ document.addEventListener("change", function (e) {
 });
 
 document.addEventListener("keydown", function (e) {
-  if (e.target.matches("input, textarea, select")) return;
+  if (e.target.matches && e.target.matches("input, textarea, select")) return;
   if (e.key === "d" || e.key === "D") { LS.prefs.demo = !LS.prefs.demo; LS.savePrefs(); LS.applyPrefs(); }
   if (e.key === "f" || e.key === "F") { LS.prefs.frames = !LS.prefs.frames; LS.savePrefs(); LS.render(); }
 });

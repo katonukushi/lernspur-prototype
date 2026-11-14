@@ -146,7 +146,7 @@
         }).join("") +
         '<div class="row wrap">' +
           (editing
-            ? ui.btn("Accept correction", { action: "ocrAccept", primary: true, disabled: !(pick[q.id] || "").trim(), cls: "js-accept-fix" }) +
+            ? ui.btn("Accept", { action: "ocrAccept", primary: true, disabled: !(pick[q.id] || "").trim(), cls: "js-accept-fix" }) +
               ui.btn("Cancel", { action: "ocrCancelEdit" })
             : ui.btn(status ? "Checked" : "Accept", { action: "ocrAccept", primary: !status, disabled: done || !!status }) +
               ui.btn("Correct", { action: "ocrCorrect", disabled: done, title: "Clear the uncertain character and pick or type the right one" })) +
